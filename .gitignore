@@ -1,6 +1,6 @@
 *.pdf
 *.exe
 .DS_Store
-.code-workspace
+*.code-workspace
 build/
 .vscode/
