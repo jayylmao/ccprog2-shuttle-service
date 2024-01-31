@@ -2,14 +2,6 @@
 #include <string.h>
 #define MAX 200
 
-struct tm {
-	int tm_min;
-	int tm_hour;
-	int tm_mday;
-	int tm_mon;
-	int tm_year;
-};
-
 struct passenger {
 	char name[MAX];
 	int id;
