@@ -1,12 +1,10 @@
 #include <stdio.h>
-#include "passenger.h"
+#include <string.h>
+#include "display.h"
 
 int main()
 {
-	struct passenger test;
-	test.id = 12211303;
-	strcpy(test.name, "test");
-
-	printf("%s %d", test.name, test.id);
+	mainMenu();
+	printf("Thank you for choosing Arrows Express.");
 	return 0;
 }

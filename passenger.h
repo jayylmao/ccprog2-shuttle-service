@@ -1,11 +1,17 @@
-#include <time.h>
-#include <string.h>
 #define MAX 200
 
-struct passenger {
-	// TODO: current date and time of trip
+typedef struct Date {
+	int date;
+	int month;
+	int year;
+} Date;
+
+typedef struct Passenger {
+	int tripNumber;
+	int priorityNumber;
 	char name[MAX];
 	int id;
 	char route[MAX];
 	int dropOffPt;
-};
+	Date tripDate;
+} Passenger;
