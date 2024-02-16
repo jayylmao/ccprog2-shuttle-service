@@ -1,6 +1,10 @@
 # ccprog2-shuttle-service
 My final machine project for my Programming with Structured Data Types class of A.Y. 2023-2024.
 
+## Test Script
+Teacher said to make a Google Docs with the test conditions:
+https://docs.google.com/document/d/1lX5aKAMuXOuK5AH3mLpbo6t9NDI8_qPdFUDwmcx5Epo/edit?usp=sharing
+
 ## Coding Conventions
 Make missing stuff up as you go ig but tell me before doing so, this stuff isn't set in stone obviously. Just serves as a guide.
 - Tabs are 4 spaces
