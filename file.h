@@ -30,7 +30,7 @@ int getTripTime(int tripNumber, FILE * fp) {
  *	writeTripData checks for the existence of a file to write trip data to and
  *	creates it if it does not exist.
  *	Precondition: Valid name, route, ID, and number are provided.
- *	@param fp: pointer to a file to write to.
+ *	@param fp pointer to a file to write to.
  *	@return None.
  */
 void writeTripData(FILE * fp, Passenger passenger)
@@ -95,7 +95,7 @@ void writeTripData(FILE * fp, Passenger passenger)
 /*
  *	getPassenger parses a file and returns a passenger struct.
  *	Precondition: File is formatted properly.
- *	@param fp: file to read data from.
+ *	@param fp file to read data from.
  *	@return struct containing all passenger info.
 
 Passenger getPassenger(FILE * fp)

@@ -17,8 +17,10 @@ Descriptive, please, even if the name is kinda long, with obvious exceptions lik
 ```C
 /*
  * functionName does this and that.
- * @param1 - parameter description.
- * @param2 - parameter description.
+ * Precondition: assumptions made when running the function.
+ * @param1: parameter description.
+ * @param2: parameter description.
+ * @return type what does this function return?
  */
 int functionName(int param1, int* param2)
 {
@@ -47,4 +49,14 @@ int i;
 for (i = 0; i < smth idk; i++) {
 	// do stuff
 }
+```
+
+### Structs
+Tag should be defined with capital 1st letter, with no global variable. A typedef of the same name should immediately follow so we don't have to type `struct` everytime we want to reference it.
+```
+struct Tag {
+	// variables go here.
+};
+
+typedef struct Tag Tag;
 ```
