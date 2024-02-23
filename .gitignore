@@ -4,3 +4,4 @@
 *.code-workspace
 build/
 .vscode/
+trips/
