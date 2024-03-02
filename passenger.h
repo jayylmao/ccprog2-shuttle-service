@@ -19,8 +19,18 @@ typedef struct Passenger Passenger;
 struct Trip {
 	int tripNumber;
 	Passenger passengers[16];
+
+	bool maxStdCapacityReached;
 	bool full;
 	bool emergency;
 };
 
 typedef struct Trip Trip;
+
+struct Date {
+	int date;
+	int month;
+	int year;
+};
+
+typedef struct Date Date;
