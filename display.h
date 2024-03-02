@@ -8,14 +8,17 @@
 
 /*
  *	passengerRoutine allows a passenger to select a trip to embark on.
+ *	Precondition: Valid date is entered.
+ *	@param date Date to pass to the writeTripData function.
+ *	@return None.
  */
-void passengerRoutine()
+void passengerRoutine(Date date)
 {
 	FILE * fp = NULL;
 
 	Passenger passenger;
 	printf("Enter your trip number: AE");
-	scanf("%d", &passenger.tripNumber);
+	sscanf("%d", &passenger.tripNumber);
 
 	printf("Priority number list\n\
 \t1: Faculty & ASF with Inter-campus assignments\n\
@@ -26,23 +29,31 @@ void passengerRoutine()
 \t6: Employees and Students with official business\n\
 Falsifying priority is punishable by death.\n\
 Enter your priority number: ");
-	scanf("%d", &passenger.priorityNumber);
-	getchar(); // removing this causes the next input to get dropped.
+
+	// TODO: replace all scanf() with fgets() and sscanf().
+	// Why?
+	// scanf("%s") only works with no spaces while fgets() works with a string of arbitrary length and supports spaces.
+	// + scanf() and fgets() do not play nicely with each other so ideally we don't mix them.
+
+	scanf(" %d", &passenger.priorityNumber);
 
 	printf("Enter your name: ");
-	fgets(passenger.name, MAX, stdin);
+	scanf("%s", passenger.name);
 
 	printf("Enter your ID: ");
-	fgets(passenger.id, MAX, stdin);
+	scanf("%s", passenger.id);
 
 	printf("Enter your drop-off point: ");
 	scanf("%d", &passenger.dropOffPt);
 
-	writeTripData(fp, passenger);
+	writeTripData(fp, passenger, date);
 }
 
 /*
  *	personnelRoutine allows personnel to view the passenger database.
+ *	Precondition:
+ *	@param 
+ *	@return None.
  */
 void personnelRoutine()
 {
@@ -52,10 +63,22 @@ void personnelRoutine()
 /*
  *	mainMenu allows the user to choose between the program's main routines.
  *	The other routines should return to this one.
+ *	Precondition: Called from driver program.
+ *	@return None.
  */
 void mainMenu()
 {
 	char userChoice = NONE;
+	Date dateStruct;
+	int date, month, year;
+
+	printf("Please enter the current date in dd mm yyyy: ");
+	scanf("%d %d %d", &date, &month, &year);
+
+	dateStruct.date = date;
+	dateStruct.month = month;
+	dateStruct.year = year;
+
 
 	while (userChoice != EXIT) {
 		printf("Welcome to the Arrows Express Trip System.\n");
@@ -69,7 +92,7 @@ void mainMenu()
 
 		switch (userChoice) {
 		case PASSENGER:
-			passengerRoutine();
+			passengerRoutine(dateStruct);
 			break;
 		case PERSONNEL:
 			personnelRoutine();
