@@ -53,7 +53,7 @@ for (i = 0; i < smth idk; i++) {
 
 ### Structs
 Tag should be defined with capital 1st letter, with no global variable. A typedef of the same name should immediately follow so we don't have to type `struct` everytime we want to reference it.
-```
+```C
 struct Tag {
 	// variables go here.
 };
