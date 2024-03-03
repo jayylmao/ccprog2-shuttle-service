@@ -18,7 +18,7 @@ void passengerRoutine(Date date)
 
 	Passenger passenger;
 	printf("Enter your trip number: AE");
-	sscanf("%d", &passenger.tripNumber);
+	scanf("%d", &passenger.tripNumber);
 
 	printf("Priority number list\n\
 \t1: Faculty & ASF with Inter-campus assignments\n\
@@ -69,6 +69,7 @@ void personnelRoutine()
 void mainMenu()
 {
 	char userChoice = NONE;
+
 	Date dateStruct;
 	int date, month, year;
 
@@ -79,6 +80,7 @@ void mainMenu()
 	dateStruct.month = month;
 	dateStruct.year = year;
 
+	
 
 	while (userChoice != EXIT) {
 		printf("Welcome to the Arrows Express Trip System.\n");
