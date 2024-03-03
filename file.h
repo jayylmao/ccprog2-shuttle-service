@@ -22,8 +22,64 @@ void setEmbarkName(int tripNumber, char embarkName[])
  *  @param fp pointer to schedule CSV file to read from.
  *  @return departure time in integer.
  */
-int getTripTime(int tripNumber, FILE *fp) {
+void getTripTime(int tripNumber, Bus *bus, FILE *fp) {
+    // int time = 0;
+
     return 0;
+}
+
+
+
+/*
+ *  TODO: readTripData reads a specified trip number from a given file and outputs all passenger data to a Bus struct
+ *  for access within the program.
+ *  @param date Current program run date to determine filename from.
+ *  @return output Bus struct.
+ */
+Bus readTripData(Date date, int tripNumber) // will return a Bus struct when done.
+{
+    // create file name string from given date.
+    char fileName[MAX];
+    snprintf(fileName, sizeof(fileName), "./trips/%02d-%02d-%04d.txt", date.date, date.month, date.year);
+    printf("%s", fileName);
+    
+    // create file pointer with file name from given date.
+    FILE *inputFile;
+    inputFile = fopen(fileName, "r");
+
+    char buffer[MAX];
+    int lineCount = 0;
+    
+    // append trip number to "AE" for comparison with trip name in file.
+    char tripName[6] = "AE";
+    snprintf(tripName, sizeof(tripName), "AE%d", tripNumber);
+
+    int currentLine;
+
+    Bus output;
+    output.passengerCount = 0;
+
+    // check for existence of file.
+    if (inputFile == NULL) {
+        printf("Error: Could not open requested file.\n");
+    } else {
+        // iterate through each line in the file.
+        while (fgets(buffer, MAX, inputFile) != NULL) {
+            // all passenger profiles in the trip file are 8 lines long. 
+            // (7 because computer counting starts from 0)
+            currentLine = lineCount % 7;
+            if (currentLine == 0 && strcmp(buffer, tripName) == 0) {
+                output.passengers[output.passengerCount].tripNumber = atoi(buffer);
+                output.passengerCount++;
+            }
+
+            lineCount++;
+        }
+    }
+
+    fclose(inputFile);
+
+    return output;
 }
 
 /*
@@ -31,6 +87,7 @@ int getTripTime(int tripNumber, FILE *fp) {
  *	creates it if it does not exist.
  *	Precondition: Valid name, route, ID, and number are provided.
  *	@param fp pointer to a file to write to.
+ *  @param date date struct for 
  *	@return None.
  */
 void writeTripData(FILE *fp, Passenger passenger, Date date)
@@ -42,7 +99,7 @@ void writeTripData(FILE *fp, Passenger passenger, Date date)
     // int tripNum = getTripNum(*folderPath);
 
     /*
-        This is to form the file name (I haven't added the Trip number function yet)
+        This is to form the file name (I haven't added the Bus number function yet)
         It should be Trip-dd-mm-yyyy.txt, for now it's only dd-mm-yyyy.txt
     */ 
 
@@ -50,7 +107,7 @@ void writeTripData(FILE *fp, Passenger passenger, Date date)
         This is to combine the path and the text file together into onc string.
         It's not strcat() because folderPath is a pointer.
     */
-    char destPath[256];
+    char destPath[MAX];
     snprintf(destPath, sizeof(destPath), "./trips/%02d-%02d-%04d.txt", date.date, date.month, date.year);
 
     // this is for file reading/writing/appending
@@ -77,36 +134,12 @@ void writeTripData(FILE *fp, Passenger passenger, Date date)
     fprintf(fp, "%s\n", passenger.name);
     fprintf(fp, "%s\n", passenger.id);
     fprintf(fp, "%d\n", passenger.priorityNumber);
+    fprintf(fp, "%02d-%02d-%04d\n", date.date, date.month, date.year);
+    fprintf(fp, "%02d:%02d\n", 6, 00); // hardcoded for now. still have to figure out time.
+    fprintf(fp, "%d\n", passenger.dropOffPt);
     fprintf(fp, ".\n.\n.\n");
 
     fclose(fp);
-}
-
-/*
- *  TODO: readTripData reads a trip from a given file and outputs it to a Trip struct
- *  for access within the program.
- *  @param date Current program run date to determine filename from.
- *  @return output Trip struct.
- */
-void readTripData(Date date) // will return a trip struct when done.
-{
-    // create file name string from given date.
-    char fileName[256];
-    snprintf(fileName, sizeof(fileName), "%02d-%02d-%04d", date.date, date.month, date.year);
-    
-    // create file pointer with file name from given date.
-    FILE *inputFile;
-    inputFile = fopen(fileName, "r");
-
-    // Trip output;
-
-    // check for existence of file.
-    if (inputFile == NULL) {
-        printf("Error: Could not open requested file.\n");
-        return; // is this considered an early return? remove if so.
-    }
-
-    // return output;
 }
 
 /*
@@ -122,8 +155,8 @@ Passenger getPassenger(FILE *fp)
 	const char *folderPath = "/.trips/";
 }
 
-Trip getTrip(FILE *fp)
+Bus getBus(FILE *fp)
 {
-	Trip trip;
-	return trip;
+	Bus bus;
+	return bus;
 }*/
