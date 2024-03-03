@@ -15,17 +15,17 @@ struct Passenger {
 
 typedef struct Passenger Passenger;
 
-// debating whether this is necessary at all.
-struct Trip {
+// each trip is an
+struct Bus {
 	int tripNumber;
 	Passenger passengers[16];
+	int passengerCount;
 
-	bool maxStdCapacityReached;
 	bool full;
 	bool emergency;
 };
 
-typedef struct Trip Trip;
+typedef struct Bus Bus;
 
 struct Date {
 	int date;
