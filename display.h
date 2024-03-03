@@ -80,8 +80,6 @@ void mainMenu()
 	dateStruct.month = month;
 	dateStruct.year = year;
 
-	
-
 	while (userChoice != EXIT) {
 		printf("Welcome to the Arrows Express Trip System.\n");
 		printf("Please select a menu option below: \n");
