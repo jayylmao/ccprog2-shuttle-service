@@ -15,7 +15,7 @@ struct Passenger {
 
 typedef struct Passenger Passenger;
 
-// each trip is an
+// each trip is an array of passengers with a trip number and some statuses.
 struct Bus {
 	int tripNumber;
 	Passenger passengers[16];
