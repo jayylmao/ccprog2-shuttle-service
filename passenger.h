@@ -10,6 +10,7 @@ struct Passenger {
 	char route[MAX];
 	int tripNumber;
 	int seatNumber;
+	int embarkPt;
 	int dropOffPt;
 };
 
@@ -20,6 +21,8 @@ struct Bus {
 	int tripNumber;
 	Passenger passengers[16];
 	int passengerCount;
+
+	int time;
 
 	bool full;
 	bool emergency;
