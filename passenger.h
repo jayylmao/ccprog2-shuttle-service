@@ -1,5 +1,13 @@
 #define MAX 200
 
+struct Date {
+	int date;
+	int month;
+	int year;
+};
+
+typedef struct Date Date;
+
 struct Passenger {
 	// personally identifiable information
 	char name[MAX];
@@ -9,7 +17,6 @@ struct Passenger {
 	// trip information
 	char route[MAX];
 	int tripNumber;
-	int seatNumber;
 	int embarkPt;
 	int dropOffPt;
 };
@@ -24,16 +31,8 @@ struct Bus {
 
 	int time;
 
-	bool full;
-	bool emergency;
+	bool isFull;
+	bool isEmergencyShuttle;
 };
 
 typedef struct Bus Bus;
-
-struct Date {
-	int date;
-	int month;
-	int year;
-};
-
-typedef struct Date Date;
