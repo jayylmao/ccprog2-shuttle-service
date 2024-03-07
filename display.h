@@ -1,24 +1,28 @@
 #include "passenger.h"
+#include "data.h"
 #include "file.h"
+#include "personnel.h"
 
 #define NONE '\0'
 #define PASSENGER '1'
 #define PERSONNEL '2'
 #define EXIT '3'
 
+#define BUS_COUNT 20
+
 /*
  *	passengerRoutine allows a passenger to select a trip to embark on.
  *	Precondition: Valid date is entered.
- *	@param date Date to pass to the writeTripData function.
+ *	@param date Date to pass to the writePassenger function.
  *	@return None.
  */
-void passengerRoutine(Date date)
+void passengerRoutine(Date date, Bus *buses, int nBuses)
 {
-	FILE * fp = NULL;
 
 	Passenger passenger;
 	printf("Enter your trip number: AE");
 	scanf("%d", &passenger.tripNumber);
+	setEmbarkPt(passenger.tripNumber, &passenger.embarkPt);
 
 	printf("Priority number list\n\
 \t1: Faculty & ASF with Inter-campus assignments\n\
@@ -46,18 +50,7 @@ Enter your priority number: ");
 	printf("Enter your drop-off point: ");
 	scanf("%d", &passenger.dropOffPt);
 
-	writeTripData(fp, passenger, date);
-}
-
-/*
- *	personnelRoutine allows personnel to view the passenger database.
- *	Precondition:
- *	@param 
- *	@return None.
- */
-void personnelRoutine()
-{
-	printf("Personnel Management Console\n");
+	addPassenger(passenger, buses, getBusIndex(passenger.tripNumber));
 }
 
 /*
@@ -68,7 +61,12 @@ void personnelRoutine()
  */
 void mainMenu()
 {
-	char userChoice = NONE;
+	char userChoice;
+	bool personnelAuthSuccess;
+
+	// all buses for the day.
+	Bus buses[BUS_COUNT];
+	initializeBuses(buses, BUS_COUNT);
 
 	Date dateStruct;
 	int date, month, year;
@@ -80,7 +78,7 @@ void mainMenu()
 	dateStruct.month = month;
 	dateStruct.year = year;
 
-	while (userChoice != EXIT) {
+	do {
 		printf("Welcome to the Arrows Express Trip System.\n");
 		printf("Please select a menu option below: \n");
 		printf("1. Passenger \n");
@@ -92,10 +90,15 @@ void mainMenu()
 
 		switch (userChoice) {
 		case PASSENGER:
-			passengerRoutine(dateStruct);
+			passengerRoutine(dateStruct, buses, BUS_COUNT);
 			break;
 		case PERSONNEL:
-			personnelRoutine();
+			personnelAuthSuccess = personnelAuthentication();
+			
+			if (personnelAuthSuccess) {
+				personnelMenu(buses, dateStruct);
+			}
+
 			break;
 		case EXIT:
 			break;
@@ -103,5 +106,8 @@ void mainMenu()
 			printf("Please input a number from 1 - 3.\n");
 			break;
 		}
-	}
+	} while (userChoice != EXIT);
+
+	// only write trip info when the program is exited.
+	writeFile(buses, 20, dateStruct);
 }
