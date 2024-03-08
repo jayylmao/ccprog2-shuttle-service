@@ -2,34 +2,34 @@
 
 /*
  *	setTripNumber returns the trip number given the bus index.
- *	Precondition: busIndex is a valid array index (positive int that does not exceed array length).
- *	@param busIndex index of bus in array.
+ *	Precondition: tripIndex is a valid array index (positive int that does not exceed array length).
+ *	@param tripIndex index of bus in array.
  *	@return Trip number.
  */
-int setTripNumber(int busIndex)
+int setTripNumber(int tripIndex)
 {
 	int tripNumber = 0;
-	if (busIndex >= 0 && busIndex <= 8) {
-		tripNumber += 101 + busIndex;
-	} else if (busIndex >= 9 && busIndex <= 19) {
-		tripNumber += 141 + busIndex;
+	if (tripIndex >= 0 && tripIndex <= 8) {
+		tripNumber += 101 + tripIndex;
+	} else if (tripIndex >= 9 && tripIndex <= 19) {
+		tripNumber += 141 + tripIndex;
 	}
 
 	return tripNumber;
 }
 
 /*
- *	initializeBuses ensures that the passenger count for all buses is not garbage data upon program launch.
- *	@param buses[] an array of buses to iterate through and initialize.
- *	@param nBuses number of buses in the array.
+ *	initializeBuses ensures that the passenger count for all trips is not garbage data upon program launch.
+ *	@param trips[] an array of trips to iterate through and initialize.
+ *	@param nTrips number of trips in the array.
  *	@return None.
  */
-void initializeBuses(Bus buses[], int nBuses)
+void initializeBuses(Trip trips[], int nTrips)
 {
 	int i;
-	for (i = 0; i < nBuses; i++) {
-		buses[i].passengerCount = 0;
-		buses[i].tripNumber = setTripNumber(i);
+	for (i = 0; i < nTrips; i++) {
+		trips[i].passengerCount = 0;
+		trips[i].tripNumber = setTripNumber(i);
 	}
 }
 
@@ -75,12 +75,12 @@ void setRoute(int tripNumber, char *dest)
 
 }
 
-void movePassenger(Passenger passenger, int n, Bus *source, Bus *dest)
+void movePassenger(Passenger passenger, int n, Trip *source, Trip *dest)
 {
 
 }
 
-int searchForLowerPriority(int priority, Bus bus)
+int searchForLowerPriority(int priority, Trip bus)
 {
 	int i;
 	int passengerCount;
@@ -95,7 +95,7 @@ int searchForLowerPriority(int priority, Bus bus)
 	return -1;
 }
 
-int searchForValidBus(int priority, Bus *buses, int nBuses, int n)
+int searchForValidBus(int priority, Trip *trips, int nTrips, int n)
 {
 	int i;
 	int validBusIndex = -1;
@@ -103,13 +103,13 @@ int searchForValidBus(int priority, Bus *buses, int nBuses, int n)
 
 	bool validBusFound = false;
 
-	for (i = n; i < nBuses && !validBusFound; i++) {
-		if (buses[i].passengerCount < MAX_PASSENGERS) {
+	for (i = n; i < nTrips && !validBusFound; i++) {
+		if (trips[i].passengerCount < MAX_PASSENGERS) {
 			validBusIndex = i;
 
 			validBusFound = true;
-		} else if (buses[i].passengerCount == MAX_PASSENGERS) {
-			lowerPriorityPassenger = searchForLowerPriority(priority, buses[i]);
+		} else if (trips[i].passengerCount == MAX_PASSENGERS) {
+			lowerPriorityPassenger = searchForLowerPriority(priority, trips[i]);
 			validBusIndex = i;
 
 			if (lowerPriorityPassenger != -1) {
@@ -122,27 +122,27 @@ int searchForValidBus(int priority, Bus *buses, int nBuses, int n)
 }
 
 /*
- *	addPassenger adds a Passenger struct to the nth Bus struct in the array.
+ *	addPassenger adds a Passenger struct to the nth Trip struct in the array.
  *	Precondition: Valid bus array and passenger provided.
  *	@param passenger a passenger object to add to a bus.
- *	@param *bus a pointer to an array of buses for the day.
+ *	@param *bus a pointer to an array of trips for the day.
  *	@param n integer that determines which bus in the array to add the passenger to.
  *	@return None.
  */
-void addPassenger(Passenger passenger, Bus *buses, int n)
+void addPassenger(Passenger passenger, Trip *trips, int n)
 {
 	int passengerCount;
-	passengerCount = buses[n].passengerCount;
+	passengerCount = trips[n].passengerCount;
 
 	bool addSuccess = false;
 
 	while (!addSuccess) {
 		if (passengerCount == MAX_PASSENGERS) {
-			searchForValidBus(passenger.priorityNumber, buses, 20, n);
+			searchForValidBus(passenger.priorityNumber, trips, 20, n);
 		} else {
-			buses[n].passengers[passengerCount] = passenger;
+			trips[n].passengers[passengerCount] = passenger;
 			addSuccess = true;
-			buses[n].passengerCount++;
+			trips[n].passengerCount++;
 		}
 	}
 }
@@ -155,32 +155,12 @@ void addPassenger(Passenger passenger, Bus *buses, int n)
  */
 int getBusIndex(int tripNumber)
 {
-	int busIndex = 0;
+	int tripIndex = 0;
 	if (tripNumber >= 101 && tripNumber <= 109) {
-		busIndex = tripNumber - 101;
+		tripIndex = tripNumber - 101;
 	} else if (tripNumber >= 150 && tripNumber <= 160) {
-		busIndex = tripNumber - 141;
+		tripIndex = tripNumber - 141;
 	}
 
-	return busIndex;
-}
-
-/*
- *	printPassenger is for debug only. 
- *	It prints the info of the nth passenger at the given bus number.
- */
-void printPassenger(Bus buses[], int busNum, int passNum)
-{
-	Passenger passenger = buses[busNum].passengers[passNum];
-
-	char embarkName[60];
-	
-	printf("Passenger #%d of Bus #%d (%d passengers in bus total) \n", passNum, busNum, buses[busNum].passengerCount);
-	printf("Name: %s\n", passenger.name);
-	printf("ID: %s\n", passenger.id);
-	printf("Priority number: %d\n", passenger.priorityNumber);
-	printf("Embark point: %d\n", passenger.embarkPt);
-	printf("Embark name: %s\n", embarkName);
-	printf("Route: %s\n", passenger.route);
-	printf("Drop off number: %d\n", passenger.dropOffPt);
+	return tripIndex;
 }
