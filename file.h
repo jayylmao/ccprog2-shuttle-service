@@ -8,64 +8,50 @@
 #define DROP_OFF_PT 7
 
 /*
- *  getTripTime gets the trip time from the schedule CSV file.
- *  Precondition: tripSched.csv file exists in a valid format.
- *  @param tripNumber Trip number.
- *  @param fp Pointer to schedule CSV file to read from.
- *  @return Departure time in integer.
+ *  getTripTime
  */
-int getTripTime(int tripNumber, Bus *bus, FILE *fp)
+int getTripTime()
 {
-    int time = 0;
+    char line[30];
+    char tripNum[6];
+    char currentCode[6]; // Adjust the size based on your needs
+    int time = -1;
+
+    printf("Input your desired trip Number: ");
+    scanf("%s", tripNum);
+
+    FILE *fp = fopen("tripSched.txt", "r");
+
+    if (fp == NULL) {
+        perror("Error opening the file");
+    } else {
+        while (fgets(line, sizeof(line), fp) != NULL) {
+            // Use sscanf to read the code and time
+            if (sscanf(line, "%s %d", currentCode, &time) == 2) {
+                if (strcmp(currentCode, tripNum) == 0) {
+                    printf("%d", time);
+                }
+            }
+        }
+    }
+
+    fclose(fp);
     return time;
 }
 
 /*
  *  readFileLine() reads a line from the buffer and saves it to the appropriate
- *  part of the nth Passenger in a bus depending on what line is being read at a given time.
+ *  part of the nth Passenger in a trip depending on what line is being read at a given time.
  *  @param *buffer Pointer to buffer string to read from.
  *  @param *tripName Trip name determines if 
  */
-void readFileLine(char *buffer, char *tripName, Bus *output, bool passengerInTrip, int currentLine, Date date)
-{
-    int passengerCount;
-    passengerCount = output->passengerCount;
-
-    if (passengerInTrip) {
-        switch (currentLine)
-        {
-        case TRIP_NUMBER:
-            output->passengers[passengerCount].tripNumber = atoi(buffer);
-            passengerCount++;
-            break;
-        case EMBARK_PT:
-            // output->passengers[passengerCount]; still deciding how embark point works
-            passengerCount++;
-            break;
-        case PASSENGER_NAME:
-            strcpy(output->passengers[passengerCount].name, buffer);
-            break;
-        case ID_NUMBER:
-            strcpy(output->passengers[passengerCount].id, buffer);
-            break;
-        case PRIORITY_NUMBER:
-            output->passengers[passengerCount].priorityNumber = atoi(buffer);
-            break;
-        case DATE_OF_TRIP:
-            break;
-        default:
-            break;
-        }
-    }
-}
 
 /*
- *  TODO: readTripData reads a specified trip number from a given file and outputs all passenger data to a Bus struct
+ *  TODO: readTripData reads a specified trip number from a given file and outputs all passenger data to a Trip struct
  *  for access within the program.
  *  @param date Current program run date to determine filename from.
  *  @return None.
- */
-void readTripData(Date date, int tripNumber, Bus *output)
+void readTripData(Date date, int tripNumber, Trip *output)
 {
     // create file name string from given date.
     char fileName[MAX];
@@ -112,23 +98,24 @@ void readTripData(Date date, int tripNumber, Bus *output)
                 }
             }
 
-            readFileLine(buffer, tripName, output, passengerInTrip, currentLineOfRecord, date);
+            // readFileLine(buffer, tripName, output, passengerInTrip, currentLineOfRecord, date);
             lineCount++;
         }
     }
 
     fclose(inputFile);
 }
+ */
 
 /*
- *  writeFile takes all the buses in the array and writes all passenger and trip info
+ *  writeFile takes all the trips in the array and writes all passenger and trip info
  *  to a file specified by the date.
- *  @param *buses Pointer to array of buses whose info will be written to the file.
- *  @param nBuses Number of buses in the array.
+ *  @param *trips Pointer to array of trips whose info will be written to the file.
+ *  @param nTrips Number of trips in the array.
  *  @param date Date structure to determine file name.
  *  @return None.
  */
-void writeFile(Bus *buses, int nBuses, Date date)
+void writeFile(Trip *trips, int nTrips, Date date)
 {
     FILE *fp;
 
@@ -150,21 +137,21 @@ void writeFile(Bus *buses, int nBuses, Date date)
 		date.date, date.month, date.year);
     }
 
-    // iterate through each bus.
-    for (i = 0; i < nBuses; i++) {
-        passengerCount = buses[i].passengerCount;
+    // iterate through each trip.
+    for (i = 0; i < nTrips; i++) {
+        passengerCount = trips[i].passengerCount;
         
         if (passengerCount > 0) {
-            fprintf(fp, "AE%d\n", buses[i].tripNumber);
+            fprintf(fp, "AE%d\n", trips[i].tripNumber);
         }
 
         for (j = 0; j < passengerCount; j++) {
-            passenger = buses[i].passengers[j];
+            passenger = trips[i].passengers[j];
             setEmbarkName(passenger.tripNumber, embarkPoint);
 
             // write passenger data to file.
             fprintf(fp, "%s\n", embarkPoint);
-            fprintf(fp, "%s\n", passenger.name);
+            fprintf(fp, "%s %s\n", passenger.Name.firstName, passenger.Name.lastName);
             fprintf(fp, "%s\n", passenger.id);
             fprintf(fp, "%d\n", passenger.priorityNumber);
             
@@ -188,7 +175,7 @@ void writeFile(Bus *buses, int nBuses, Date date)
     fclose(fp);
 }
 
-void readFile(FILE *fp, Bus *buses, int n, Date date)
+void readFile(FILE *fp, Trip *trips, int n, Date date)
 {
 
 }
