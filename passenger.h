@@ -9,8 +9,12 @@ struct Date {
 typedef struct Date Date;
 
 struct Passenger {
-	// personally identifiable information
-	char name[MAX];
+	// personally identifiable information.
+	struct Name {
+		char firstName[MAX];
+		char lastName[MAX];
+	} Name;
+
 	char id[8];
 	int priorityNumber;
 
@@ -24,7 +28,7 @@ struct Passenger {
 typedef struct Passenger Passenger;
 
 // each trip is an array of passengers with a trip number and some statuses.
-struct Bus {
+struct Trip {
 	int tripNumber;
 	Passenger passengers[16];
 	int passengerCount;
@@ -35,4 +39,4 @@ struct Bus {
 	bool isEmergencyShuttle;
 };
 
-typedef struct Bus Bus;
+typedef struct Trip Trip;
