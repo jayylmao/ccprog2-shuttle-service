@@ -26,10 +26,14 @@ int setTripNumber(int tripIndex)
  */
 void initializeBuses(Trip trips[], int nTrips)
 {
-	int i;
+	int i, j;
 	for (i = 0; i < nTrips; i++) {
 		trips[i].passengerCount = 0;
 		trips[i].tripNumber = setTripNumber(i);
+		
+		for (j = 0; j < 16; j++) {
+			strcpy(trips[i].passengers[j].id, "-1");
+		}
 	}
 }
 

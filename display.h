@@ -10,6 +10,56 @@
 
 #define TRIP_COUNT 20
 
+void displayTrip(int tripNumber, Trip trips[])
+{
+	int busIndex, i;
+	busIndex = getBusIndex(tripNumber);
+
+	Trip trip = trips[busIndex];
+
+
+	// standard seating
+	if (trip.passengerCount <= 13) {
+		printf(".____.____.____.\n");
+
+		for (i = 0; i < 13; i++) {
+			if (strcmp(trip.passengers[i].id, "-1") == 0) {
+				printf("| %02d ", i + 1);
+			} else {
+				printf("| XX ");
+			}
+
+			if ((i + 1) % 3 == 0 && i != 0) {
+				printf("| \n");
+				printf(".____.____.____.\n");
+			}
+		}
+
+		printf("| Driver  |\n");
+	} else {
+		printf(".____.____.____.____.\n");
+
+		for (i = 0; i < 16; i++) {
+			if (strcmp(trip.passengers[i].id, "-1") == 0 && (i + 1) == 16) {
+				printf("| %02d      | Driver  ", i + 1);
+			} else if (strcmp(trip.passengers[i].id, "-1") == 0) {
+				printf("| %02d ", i + 1);
+			} else {
+				printf("| XX ");
+			}
+
+			if ((i + 1) == 12) {
+				printf("| \n");
+				printf(".____.____.____.____.\n");
+				printf("|    ");
+			} else if (((i + 1) % 4 == 0 || (i + 1) == 15) && i != 0) {
+				printf("| \n");
+				printf(".____.____.____.____.\n");
+			}
+		}
+	}
+}
+
 /*
  *	personnelAuthentication checks a password file and asks the user to input a password
  *	before displaying the personnel menu.
@@ -120,6 +170,8 @@ void passengerRoutine(Date date, Trip *trips, int nTrips)
 	printf("Enter your trip number: AE");
 	scanf("%d", &passenger.tripNumber);
 	setEmbarkPt(passenger.tripNumber, &passenger.embarkPt);
+
+	displayTrip(passenger.tripNumber, trips);
 
 	printf("Priority number list\n\
 \t1: Faculty & ASF with Inter-campus assignments\n\
