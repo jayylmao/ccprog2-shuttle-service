@@ -56,7 +56,13 @@ void viewPassAtDrop(Trip trips[], int nTrips)
 
 void viewPassInfo(Trip trips[], int nTrips)
 {
+	int input, i;
+	printf("Enter a trip number: AE");
+	scanf("%d", &input);
 
+	for (i = 0; i < nTrips; i++) {
+		
+	}
 }
 
 void loadPassInfo()
