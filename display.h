@@ -10,10 +10,26 @@
 
 #define TRIP_COUNT 20
 
+// ANSI Color escape sequences courtesy of https://stackoverflow.com/questions/3219393/stdlib-and-colored-output-in-c
+#define RED     "\x1b[31m"
+#define GREEN   "\x1b[32m"
+#define YELLOW  "\x1b[33m"
+#define BLUE    "\x1b[34m"
+#define MAGENTA "\x1b[35m"
+#define CYAN    "\x1b[36m"
+#define RESET   "\x1b[0m"
+
+/*
+ *	displayTrip visualizes the bus the user has selected on screen.
+ *	Precondition: A valid trip number is provided.
+ *	@param tripNumber Integer corresponding to trip number.
+ *	@trips[] Array of trips to get trip information from.
+ *	@return None.
+ */
 void displayTrip(int tripNumber, Trip trips[])
 {
 	int busIndex, i;
-	busIndex = getBusIndex(tripNumber);
+	busIndex = getTripIndex(tripNumber);
 
 	Trip trip = trips[busIndex];
 
@@ -23,41 +39,93 @@ void displayTrip(int tripNumber, Trip trips[])
 		printf(".____.____.____.\n");
 
 		for (i = 0; i < 13; i++) {
-			if (strcmp(trip.passengers[i].id, "-1") == 0) {
+			if (strcmp(trip.passengers[i].id, "-1") == 0) { // print seat number if not occupied
 				printf("| %02d ", i + 1);
-			} else {
+			} else { // print XX if seat is occupied
 				printf("| XX ");
 			}
 
-			if ((i + 1) % 3 == 0 && i != 0) {
+			if ((i + 1) % 3 == 0 && i != 0) { // print separator + newline for each row of seats
 				printf("| \n");
 				printf(".____.____.____.\n");
 			}
 		}
 
 		printf("| Driver  |\n");
-	} else {
+	} else {	// high-volume seating
 		printf(".____.____.____.____.\n");
 
 		for (i = 0; i < 16; i++) {
-			if (strcmp(trip.passengers[i].id, "-1") == 0 && (i + 1) == 16) {
+			if (strcmp(trip.passengers[i].id, "-1") == 0 && (i + 1) == 16) { // last row has a different format
 				printf("| %02d      | Driver  ", i + 1);
-			} else if (strcmp(trip.passengers[i].id, "-1") == 0) {
+			} else if (strcmp(trip.passengers[i].id, "-1") == 0) { // print seat number if not occupied
 				printf("| %02d ", i + 1);
-			} else {
+			} else { // print XX if seat is occupied
 				printf("| XX ");
 			}
 
-			if ((i + 1) == 12) {
+			if ((i + 1) == 12) { // 12th seating has a blank space after it in the row below
 				printf("| \n");
 				printf(".____.____.____.____.\n");
 				printf("|    ");
-			} else if (((i + 1) % 4 == 0 || (i + 1) == 15) && i != 0) {
+			} else if (((i + 1) % 4 == 0 || (i + 1) == 15) && i != 0) { // print separator + newline for each row of seats
 				printf("| \n");
 				printf(".____.____.____.____.\n");
 			}
 		}
 	}
+}
+
+/*
+ *	displayDropOff displays a list of exits and drop-off points for the user to select from.
+ *	Precondition: A valid trip number must be given.
+ *	@param tripNumber Integer corresponding to trip number.
+ *	@return Integer corresponding to the drop-off point.
+ */
+int displayDropOff(int tripNumber)
+{
+	// dropOff is where the user's input is stored.
+	// menuLimit is an upper bound for the menu to determine input validity.
+	int dropOff, menuLimit;
+	printf("Exit list\n");
+	if (tripNumber >= 101 && tripNumber <= 109) {
+		printf("\tVia Mamplasan exit\n");
+		printf("\t\t1. Mamplasan Toll Exit\n");
+		printf("\t\t2. Phase 5, San Jose Village\n");
+		printf("\t\t3. Milagros Del Rosario Building - East Canopy\n");
+		printf("\tVia ETON exit\n");
+		printf("\t\t4. Laguna Blvd. Guard House\n");
+		printf("\t\t5. Milagros Del Roasrio Building - East Canopy\n");
+		menuLimit = 5;
+	} else if (tripNumber >= 150 && tripNumber <= 160) {
+		printf("\tVia Estrada\n");
+		printf("\t\t1. Petron Gasoline Station along Gil Puyat Avenue\n");
+		printf("\t\t2. Gate 4: Gokongwei Gate\n");
+		printf("\t\t3. Gate 2: North Gate (HSSH)\n");
+		printf("\t\t4. Gate 1: South Gate (LS Building Entrance)\n");
+		printf("\tVia Buendia/LRT\n");
+		printf("\t\t5. College of St. Benilde (CSB) Along Taft\n");
+		printf("\t\t6. Gate 4: Gokongwei Gate\n");
+		printf("\t\t7. Gate 2: North Gate (HSSH)\n");
+		printf("\t\t8. Gate 1: South Gate (LS Building Entrance)\n");
+		menuLimit = 8;
+	}
+
+	do {
+		printf("Choose a drop-off point: ");
+		scanf("%d", &dropOff);
+
+		if (dropOff < 1 || dropOff > menuLimit) {
+			printf("Select a drop-off point from 1 to %d.\n", menuLimit);
+		}
+	} while (dropOff < 1 || dropOff > menuLimit);
+
+	// offset by 5 if boarding from laguna, so drop off 1-5 are manila and 6-13 are laguna.
+	if (tripNumber >= 150 && tripNumber <= 160) {
+		dropOff += 5;
+	}
+
+	return dropOff;
 }
 
 /*
@@ -80,7 +148,7 @@ bool personnelAuthentication()
 	if (fp == NULL) {
 		printf("CRITICAL ERROR: No password set. Contact ITS.");
 	} else {
-		fgets(password, MAX, fp);
+		fscanf(fp, "%s", password);
 
 		while (!passwordMatch && strcmp(input, "0") != 0) {
 			printf("Enter the personnel password, or 0 to cancel: ");
@@ -105,6 +173,8 @@ bool personnelAuthentication()
 /*
  *	personnelMenu allows personnel to access the functions available to them.
  *	Precondition: Called from main menu if personnel authentication was successful.
+ *	@param trips[] List of trips.
+ *	@param date Current date entered at startup.
  *	@return None.
  */
 void personnelMenu(Trip trips[], Date date)
@@ -112,16 +182,29 @@ void personnelMenu(Trip trips[], Date date)
 	char userChoice;
 	do
 	{
-		printf("Personnel Management Console\n");
-		printf("Please select a menu option below: \n");
-		printf("1. View number of passengers on trip \n");
-		printf("2. View number of passengers at drop-off point \n");
-		printf("3. View passenger information \n");
-		printf("4. Load passenger information \n");
-		printf("5. Search passenger \n");
-		printf("6. Load file \n");
-		printf("7. Log out of personnel management console \n");
+		printf("======[ Personnel Management Console ]=============================================\n\n");
+		printf(GREEN"[1.] View number of passengers on trip \n"RESET);
+		printf("Input a trip number to view the number of passengers.\n\n");
+
+		printf(GREEN"[2.] View number of passengers at drop-off point \n"RESET);
+		printf("Input a trip number to view the number of passengers at each drop-off point.\n\n");
+
+		printf(GREEN"[3.] View passenger information \n"RESET);
+		printf("Input a trip number to view all passengers on that trip.\n\n");
+
+		printf(GREEN"[4.] Load passenger information \n"RESET);
+		printf("Select a file to add a passenger's data into the program.\n\n");
+
+		printf(GREEN"[5.] Search passenger \n"RESET);
+		printf("Search for passengers by their last name.\n\n");
+
+		printf(GREEN"[6.] Load file \n"RESET);
+		printf("Select a file to view all the trips from that day.\n\n");
+
+		printf(GREEN"[7.] Log out \n"RESET);
+		printf("Go back to the main menu.\n\n");
 		
+
 		scanf(" %c", &userChoice);
 		system("clear||cls");
 
@@ -154,13 +237,14 @@ void personnelMenu(Trip trips[], Date date)
 		}
 		system("clear||cls");
 	} while (userChoice != PERSONNEL_EXIT);
-	
 }
 
 /*
  *	passengerRoutine allows a passenger to select a trip to embark on.
  *	Precondition: Valid date is entered.
  *	@param date Date to pass to the writePassenger function.
+ *	@param *trips List of trips to add user to.
+ *	@param nTrips Number of trips in the list.
  *	@return None.
  */
 void passengerRoutine(Date date, Trip *trips, int nTrips)
@@ -183,11 +267,6 @@ void passengerRoutine(Date date, Trip *trips, int nTrips)
 Falsifying priority is punishable by death.\n\
 Enter your priority number: ");
 
-	// TODO: replace all scanf() with fgets() and sscanf().
-	// Why?
-	// scanf("%s") only works with no spaces while fgets() works with a string of arbitrary length and supports spaces.
-	// + scanf() and fgets() do not play nicely with each other so ideally we don't mix them.
-
 	scanf(" %d", &passenger.priorityNumber);
 
 	printf("Enter your first and last name: ");
@@ -196,10 +275,9 @@ Enter your priority number: ");
 	printf("Enter your ID: ");
 	scanf("%s", passenger.id);
 
-	printf("Enter your drop-off point: ");
-	scanf("%d", &passenger.dropOffPt);
+	passenger.dropOffPt = displayDropOff(passenger.tripNumber);
 
-	addPassenger(passenger, trips, getBusIndex(passenger.tripNumber));
+	addPassenger(passenger, trips, getTripIndex(passenger.tripNumber));
 	system("clear||cls");
 }
 
@@ -221,9 +299,15 @@ void mainMenu()
 	Date dateStruct;
 	int date, month, year;
 
-	printf("Please enter the current date in dd mm yyyy: ");
-	scanf("%d %d %d", &date, &month, &year);
+	system("clear||cls");
 
+	printf("======[ System Initializiation ]==================================================\n\n");
+	
+	do {
+		printf(BLUE"Please enter the current date in dd mm yyyy: ");
+	} while (scanf("%d %d %d", &date, &month, &year) < 0);
+
+	printf(RESET);
 	system("clear||cls");
 
 	dateStruct.date = date;
@@ -231,14 +315,21 @@ void mainMenu()
 	dateStruct.year = year;
 
 	do {
-		printf("Welcome to the Arrows Express Trip System.\n");
-		printf("Please select a menu option below: \n");
-		printf("1. Passenger \n");
-		printf("2. Personnel \n");
-		printf("3. Exit \n");
+		printf("======[ "GREEN"Arrows Express " RESET"Trip System ]==============================================\n\n");
+		printf(GREEN"[1.] Passenger \n"RESET);
+		printf("Board a trip at a specified time by entering your details.\n\n");
 
+		printf(GREEN"[2.] Personnel \n"RESET);
+		printf("View and manage trip data.\n\n");
+
+		printf(GREEN"[3.] Exit \n"RESET);
+		printf("Exit the program and save current trip data.\n\n");
+
+		printf(BLUE"Choose an option: ");
 		scanf(" %c", &userChoice);
 		system("clear||cls");
+
+		printf(RESET);
 
 		switch (userChoice) {
 		case PASSENGER:
@@ -255,7 +346,7 @@ void mainMenu()
 		case EXIT:
 			break;
 		default:
-			printf("Please input a number from 1 - 3.\n");
+			printf(YELLOW"[!] Please input a number from 1 - 3.\n"RESET);
 			break;
 		}
 	} while (userChoice != EXIT);
