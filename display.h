@@ -20,6 +20,24 @@
 #define RESET   "\x1b[0m"
 
 /*
+ *	printHeader displays the standard header at the top of every screen in the program.
+ *	Precondition: Positive integer header size provided.
+ *	@param *message Message to be printed in between the brackets.
+ *	@param headerSize Length of header.
+ */
+void printHeader(char *message, int headerSize)
+{
+	int i, msgLength = strlen(message);
+	printf("======[ %s ]", message);
+
+	for (i = 0; i < headerSize - (msgLength + 10); i++) {
+		printf("=");
+	}
+
+	printf("\n\n");
+}
+
+/*
  *	displayTrip visualizes the bus the user has selected on screen.
  *	Precondition: A valid trip number is provided.
  *	@param tripNumber Integer corresponding to trip number.
@@ -146,23 +164,24 @@ bool personnelAuthentication()
 
 	// check if password file exists at all.
 	if (fp == NULL) {
-		printf("CRITICAL ERROR: No password set. Contact ITS.");
+		printf(RED"[!]: No password set. Contact ITS."RESET);
 	} else {
 		fscanf(fp, "%s", password);
 
 		while (!passwordMatch && strcmp(input, "0") != 0) {
+			printHeader("Personnel Management Console", 80);
 			printf("Enter the personnel password, or 0 to cancel: ");
 			scanf("%s", input);
 
 			system("clear||cls");
 
 			if (strcmp(password, input) == 0) {
-				printf("INFO: Login successful.\n");
+				printf(GREEN"[*]: Login successful.\n"RESET);
 				passwordMatch = true;
 			} else if (strcmp(input, "0") == 0) {
-				printf("INFO: Login canceled.\n");
+				printf(YELLOW"[*]: Login canceled.\n"RESET);
 			} else {
-				printf("Incorrect password entered. Try again.\n");
+				printf(RED"[*]: Incorrect password entered. Try again.\n"RESET);
 			}
 		}
 	}
@@ -182,7 +201,7 @@ void personnelMenu(Trip trips[], Date date)
 	char userChoice;
 	do
 	{
-		printf("======[ Personnel Management Console ]=============================================\n\n");
+		printHeader("Personnel Management Console", 80);
 		printf(GREEN"[1.] View number of passengers on trip \n"RESET);
 		printf("Input a trip number to view the number of passengers.\n\n");
 
@@ -204,8 +223,9 @@ void personnelMenu(Trip trips[], Date date)
 		printf(GREEN"[7.] Log out \n"RESET);
 		printf("Go back to the main menu.\n\n");
 		
-
+		printf(BLUE"Choose an option: ");
 		scanf(" %c", &userChoice);
+		printf(RESET);
 		system("clear||cls");
 
 		// the functions below are found in personnel.h
@@ -232,7 +252,7 @@ void personnelMenu(Trip trips[], Date date)
 		case PERSONNEL_EXIT:
 			break;
 		default:
-			printf("Please input a number from 1 - 7.\n");
+			printf(YELLOW"[*]: Please input a number from 1 - 7.\n"RESET);
 			break;
 		}
 		system("clear||cls");
@@ -290,6 +310,7 @@ Enter your priority number: ");
 void mainMenu()
 {
 	char userChoice;
+
 	bool personnelAuthSuccess;
 	
 	// all trips for the day.
@@ -301,7 +322,7 @@ void mainMenu()
 
 	system("clear||cls");
 
-	printf("======[ System Initializiation ]==================================================\n\n");
+	printHeader(YELLOW"System Initialization"RESET, 80);
 	
 	do {
 		printf(BLUE"Please enter the current date in dd mm yyyy: ");
@@ -315,7 +336,7 @@ void mainMenu()
 	dateStruct.year = year;
 
 	do {
-		printf("======[ "GREEN"Arrows Express " RESET"Trip System ]==============================================\n\n");
+		printHeader(GREEN"Arrows Express"RESET" Trip System", 80);
 		printf(GREEN"[1.] Passenger \n"RESET);
 		printf("Board a trip at a specified time by entering your details.\n\n");
 
@@ -346,7 +367,7 @@ void mainMenu()
 		case EXIT:
 			break;
 		default:
-			printf(YELLOW"[!] Please input a number from 1 - 3.\n"RESET);
+			printf(YELLOW"[*] Please input a number from 1 - 3.\n"RESET);
 			break;
 		}
 	} while (userChoice != EXIT);
