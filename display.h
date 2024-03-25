@@ -227,7 +227,7 @@ void personnelMenu(Trip trips[], Date date)
 			searchPass(trips, TRIP_COUNT);
 			break;
 		case LOAD_FILE:
-			loadFile();
+			readTrips(trips, date);
 			break;
 		case PERSONNEL_EXIT:
 			break;

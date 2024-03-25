@@ -57,6 +57,22 @@ void setEmbarkName(int tripNumber, char embarkName[])
 }
 
 /*
+ *	setEmbarkPt uses the trip number to set the embark point in integer form for that passenger.
+ *	This is more convenient in code for, say, comparisons.
+ *	@param tripNumber trip number.
+ *	@param *dest pointer to integer to save embark point number to.
+ *	@return None.
+ */
+void setEmbarkPt(int tripNumber, int *dest)
+{
+	if (tripNumber >= 101 && tripNumber <= 109) {
+		*dest = 1;
+	} else if (tripNumber >= 150 && tripNumber <= 160) {
+		*dest = 2;
+	}
+}
+
+/*
  *	
  */
 void setRoute(int tripNumber, char *dest)

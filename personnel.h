@@ -6,6 +6,15 @@
 #define LOAD_FILE '6'
 #define PERSONNEL_EXIT '7'
 
+// ANSI Color escape sequences courtesy of https://stackoverflow.com/questions/3219393/stdlib-and-colored-output-in-c
+#define RED     "\x1b[31m"
+#define GREEN   "\x1b[32m"
+#define YELLOW  "\x1b[33m"
+#define BLUE    "\x1b[34m"
+#define MAGENTA "\x1b[35m"
+#define CYAN    "\x1b[36m"
+#define RESET   "\x1b[0m"
+
 /*
  *	viewPassCount shows the number of passengers on a specified trip.
  *	Precondition: trips[] array exists.
@@ -16,15 +25,18 @@
 void viewPassCount(Trip trips[], int nTrips)
 {
 	int input, i;
-	printf("Enter a trip number: AE");
-	scanf("%d", &input);
+	do {
+		printf(BLUE"Enter a trip number, or type 0 to return: AE");
+		scanf("%d", &input);
+		printf(RESET);
 
-	// iterate through each trip in the array.
-	for (i = 0; i < nTrips; i++) {
-		if (trips[i].tripNumber == input) {
-			printf("Number of passengers on trip AE%d: %d\n", trips[i].tripNumber, trips[i].passengerCount);
+		// iterate through each trip in the array.
+		for (i = 0; i < nTrips; i++) {
+			if (trips[i].tripNumber == input) {
+				printf("Number of passengers on trip AE%d: %d\n", trips[i].tripNumber, trips[i].passengerCount);
+			}
 		}
-	}
+	} while (input != 0);
 }
 
 /*
@@ -37,21 +49,24 @@ void viewPassCount(Trip trips[], int nTrips)
 void viewPassAtDrop(Trip trips[], int nTrips)
 {
 	int input, i, j;
-	printf("Enter a trip number: AE");
-	scanf("%d", &input);
+	do {
+		printf(BLUE"Enter a trip number, or 0 to return: AE");
+		scanf("%d", &input);
+		printf(RESET);
 
-	Trip trip;
-	Passenger passenger;
+		Trip trip;
+		Passenger passenger;
 
-	for (i = 0; i < nTrips; i++) {
-		trip = trips[i];
+		for (i = 0; i < nTrips; i++) {
+			trip = trips[i];
 
-		for (j = 0; j < trip.passengerCount; j++) {
-			passenger = trip.passengers[j];
-			// TODO: finish this function. this will be removed and is just to avoid the warning.
-			printf("%s", passenger.Name.firstName);
+			for (j = 0; j < trip.passengerCount; j++) {
+				passenger = trip.passengers[j];
+				// TODO: finish this function. this will be removed and is just to avoid the warning.
+				printf("%s", passenger.Name.firstName);
+			}
 		}
-	}
+	} while (input != 0);
 }
 
 void viewPassInfo(Trip trips[], int nTrips)
@@ -115,5 +130,5 @@ void searchPass(Trip trips[], int nTrips)
 
 void loadFile()
 {
-
+	
 }

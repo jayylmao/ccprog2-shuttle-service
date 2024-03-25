@@ -67,6 +67,32 @@ void writeFile(Trip *trips, int nTrips, Date date)
     fclose(fp);
 }
 
+/*
+ *  readTrips reads all trips from a file of a given date.
+ */
+void readTrips(Trip trips[], Date date)
+{
+    FILE *fp;
+    
+    // number of passengers
+    int passNum = 0;
+
+    // track which line is being read.
+    int lineNum = 0;
+
+    char buffer[MAX];
+    char sourcePath[MAX];
+
+    // create source path based on given date.
+    snprintf(sourcePath, sizeof(sourcePath), "./trips/%02d-%02d-%02d.txt", date.date, date.month, date.year);
+    fp = fopen(sourcePath, "r");
+
+    passNum++;
+    lineNum++;
+
+    fclose(fp);
+}
+
 // void readTrips(Trip *trips, Date date)
 // {
 //     FILE *fp;
