@@ -1,12 +1,13 @@
 #define MAX_PASSENGERS 16
+#define TRIP_COUNT 22
 
 /*
- *	setTripNumber returns the trip number given the trip index.
+ *	getTripNumber returns the trip number given the trip index.
  *	Precondition: tripIndex is a valid array index (positive int that does not exceed array length).
  *	@param tripIndex index of trip in array.
  *	@return Trip number.
  */
-int setTripNumber(int tripIndex)
+int getTripNumber(int tripIndex)
 {
 	int tripNumber = 0;
 	if (tripIndex >= 0 && tripIndex <= 8) {
@@ -16,6 +17,24 @@ int setTripNumber(int tripIndex)
 	}
 
 	return tripNumber;
+}
+
+/*
+ *	getTripIndex returns the corresponding trip index given a trip number.
+ *	Precondition: valid trip number is provided.
+ *	@param tripNumber trip number from schedule (101 - 109, 150 - 160).
+ *	@return index of appropriate trip in array.
+ */
+int getTripIndex(int tripNumber)
+{
+	int tripIndex = 0;
+	if (tripNumber >= 101 && tripNumber <= 109) {
+		tripIndex = tripNumber - 101;
+	} else if (tripNumber >= 150 && tripNumber <= 160) {
+		tripIndex = tripNumber - 141;
+	}
+
+	return tripIndex;
 }
 
 /*
@@ -29,7 +48,20 @@ void initializeBuses(Trip trips[], int nTrips)
 	int i, j;
 	for (i = 0; i < nTrips; i++) {
 		trips[i].passengerCount = 0;
-		trips[i].tripNumber = setTripNumber(i);
+		trips[i].tripNumber = getTripNumber(i);
+
+		if (i < 11) {
+			trips[i].embarkPt = 0;
+		} else {
+			trips[i].embarkPt = 1;
+		}
+
+		// initialize half of trips to be on the first route for each embark point.
+		if (i < 6 || (i > 10 && i < 16)) {
+			trips[i].route = 0;
+		} else {
+			trips[i].route = 1;
+		}
 		
 		// set all passengers to -1 to serve as an "invalid" id.
 		for (j = 0; j < 16; j++) {
@@ -39,51 +71,27 @@ void initializeBuses(Trip trips[], int nTrips)
 }
 
 /*
- *	setEmbarkName uses a trip number to write the embark point for that passenger.
+ *	setEmbarkName converts the integer representation of the embark point to the string name.
  *	Precondition: Valid trip number provided and destination string has valid length.
- *	@param tripNumber trip number.
+ *	@param embarkPtInt Integer representation of embark point name in program.
  *	@param embarkName pointer to string to save embark point name to.
  *	@return None.
  */
-void setEmbarkName(int tripNumber, char embarkName[])
+void setEmbarkName(int embarkPtInt, char embarkName[])
 {
-	if (tripNumber >= 101 && tripNumber <= 109) {
+	switch (embarkPtInt)
+	{
+	case 0:
 		strcpy(embarkName, "South Gate Driveway (Manila Campus)");
-	} else if (tripNumber >= 150 && tripNumber <= 160) {
+		break;
+	case 1:
 		strcpy(embarkName, "Milagros del Rosario Building - East Canopy (Laguna Campus)");
-	} else {
-		strcpy(embarkName, "Unknown trip number.");
+		break;
+	default:
+		strcpy(embarkName, "Unknown embarkation point.");
+		break;
 	}
-}
-
-/*
- *	setEmbarkPt uses the trip number to set the embark point in integer form for that passenger.
- *	This is more convenient in code for, say, comparisons.
- *	@param tripNumber trip number.
- *	@param *dest pointer to integer to save embark point number to.
- *	@return None.
- */
-void setEmbarkPt(int tripNumber, int *dest)
-{
-	if (tripNumber >= 101 && tripNumber <= 109) {
-		*dest = 1;
-	} else if (tripNumber >= 150 && tripNumber <= 160) {
-		*dest = 2;
-	}
-}
-
-/*
- *	
- */
-void setRoute(int tripNumber, char *dest)
-{
-
-}
-
-void movePassenger(Passenger passenger, int n, Trip *source, Trip *dest)
-{
-
-}
+}	
 
 /*
  *	searchForLowerPriority searches for a passenger with a lower priority in a specified trip, given a specified priority level to check against.
@@ -107,36 +115,6 @@ int searchForLowerPriority(int priority, Trip trip)
 }
 
 /*
- *	searchForValidBus returns the index of the first non-full trip it finds in the array.
- *	Precondition: 
- */
-int searchForValidBus(int priority, Trip *trips, int nTrips, int n)
-{
-	int i;
-	int validBusIndex = -1;
-	int lowerPriorityPassenger;
-
-	bool validBusFound = false;
-
-	for (i = n; i < nTrips && !validBusFound; i++) {
-		if (trips[i].passengerCount < MAX_PASSENGERS) {
-			validBusIndex = i;
-
-			validBusFound = true;
-		} else if (trips[i].passengerCount == MAX_PASSENGERS) {
-			lowerPriorityPassenger = searchForLowerPriority(priority, trips[i]);
-			validBusIndex = i;
-
-			if (lowerPriorityPassenger != -1) {
-				validBusFound = true;
-			}
-		}
-	}
-
-	return validBusIndex;
-}
-
-/*
  *	addPassenger adds a Passenger struct to the nth Trip struct in the array.
  *	Precondition: Valid trip array and passenger provided.
  *	@param passenger a passenger object to add to a trip.
@@ -146,36 +124,22 @@ int searchForValidBus(int priority, Trip *trips, int nTrips, int n)
  */
 void addPassenger(Passenger passenger, Trip *trips, int n)
 {
-	int passengerCount;
+	int passengerCount, lowerPriorityPassenger;
 	passengerCount = trips[n].passengerCount;
+	
+	if (passengerCount == MAX_PASSENGERS) {
+		lowerPriorityPassenger = searchForLowerPriority(passenger.priorityNumber, trips[n]);
 
-	bool addSuccess = false;
-
-	while (!addSuccess) {
-		if (passengerCount == MAX_PASSENGERS) {
-			searchForValidBus(passenger.priorityNumber, trips, 20, n);
+		if (lowerPriorityPassenger == -1 && n < TRIP_COUNT - 1) {
+			addPassenger(passenger, trips, n + 1); // if no lower priority found, try next bus.
+		} else if (n < TRIP_COUNT - 1) {
+			addPassenger(trips[n].passengers[lowerPriorityPassenger], trips, n + 1); // otherwise, move lower priority passenger to next bus.
+			trips[n].passengers[passengerCount] = passenger; // replace old slot with new passenger.
 		} else {
-			trips[n].passengers[passengerCount] = passenger;
-			addSuccess = true;
-			trips[n].passengerCount++;
+			printf("[*]: The system is completely unable to accept any more passengers.\n");
 		}
+	} else {
+		trips[n].passengers[passengerCount] = passenger;
+		trips[n].passengerCount++;
 	}
-}
-
-/*
- *	getTripIndex returns the corresponding trip index given a trip number.
- *	Precondition: valid trip number is provided.
- *	@param tripNumber trip number from schedule (101 - 109, 150 - 160).
- *	@return index of appropriate trip in array.
- */
-int getTripIndex(int tripNumber)
-{
-	int tripIndex = 0;
-	if (tripNumber >= 101 && tripNumber <= 109) {
-		tripIndex = tripNumber - 101;
-	} else if (tripNumber >= 150 && tripNumber <= 160) {
-		tripIndex = tripNumber - 141;
-	}
-
-	return tripIndex;
 }
