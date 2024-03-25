@@ -1,9 +1,9 @@
 #define MAX_PASSENGERS 16
 
 /*
- *	setTripNumber returns the trip number given the bus index.
+ *	setTripNumber returns the trip number given the trip index.
  *	Precondition: tripIndex is a valid array index (positive int that does not exceed array length).
- *	@param tripIndex index of bus in array.
+ *	@param tripIndex index of trip in array.
  *	@return Trip number.
  */
 int setTripNumber(int tripIndex)
@@ -31,6 +31,7 @@ void initializeBuses(Trip trips[], int nTrips)
 		trips[i].passengerCount = 0;
 		trips[i].tripNumber = setTripNumber(i);
 		
+		// set all passengers to -1 to serve as an "invalid" id.
 		for (j = 0; j < 16; j++) {
 			strcpy(trips[i].passengers[j].id, "-1");
 		}
@@ -56,23 +57,7 @@ void setEmbarkName(int tripNumber, char embarkName[])
 }
 
 /*
- *	setEmbarkPt uses the trip number to set the embark point in integer form for that passenger.
- *	This is more convenient in code for, say, comparisons.
- *	@param tripNumber trip number.
- *	@param *dest pointer to integer to save embark point number to.
- *	@return None.
- */
-void setEmbarkPt(int tripNumber, int *dest)
-{
-	if (tripNumber >= 101 && tripNumber <= 109) {
-		*dest = 1;
-	} else if (tripNumber >= 150 && tripNumber <= 160) {
-		*dest = 2;
-	}
-}
-
-/*
- *
+ *	
  */
 void setRoute(int tripNumber, char *dest)
 {
@@ -84,14 +69,20 @@ void movePassenger(Passenger passenger, int n, Trip *source, Trip *dest)
 
 }
 
-int searchForLowerPriority(int priority, Trip bus)
+/*
+ *	searchForLowerPriority searches for a passenger with a lower priority in a specified trip, given a specified priority level to check against.
+ *	Precondition: None.
+ *	@param priority Priority number to check against.
+ *	@param trip Trip to check in.
+ */
+int searchForLowerPriority(int priority, Trip trip)
 {
 	int i;
 	int passengerCount;
-	passengerCount = bus.passengerCount;
+	passengerCount = trip.passengerCount;
 
 	for (i = 0; i < passengerCount; i++) {
-		if (bus.passengers[i].priorityNumber < priority) {
+		if (trip.passengers[i].priorityNumber < priority) {
 			return i;
 		}
 	}
@@ -99,6 +90,10 @@ int searchForLowerPriority(int priority, Trip bus)
 	return -1;
 }
 
+/*
+ *	searchForValidBus returns the index of the first non-full trip it finds in the array.
+ *	Precondition: 
+ */
 int searchForValidBus(int priority, Trip *trips, int nTrips, int n)
 {
 	int i;
@@ -127,10 +122,10 @@ int searchForValidBus(int priority, Trip *trips, int nTrips, int n)
 
 /*
  *	addPassenger adds a Passenger struct to the nth Trip struct in the array.
- *	Precondition: Valid bus array and passenger provided.
- *	@param passenger a passenger object to add to a bus.
- *	@param *bus a pointer to an array of trips for the day.
- *	@param n integer that determines which bus in the array to add the passenger to.
+ *	Precondition: Valid trip array and passenger provided.
+ *	@param passenger a passenger object to add to a trip.
+ *	@param *trip a pointer to an array of trips for the day.
+ *	@param n integer that determines which trip in the array to add the passenger to.
  *	@return None.
  */
 void addPassenger(Passenger passenger, Trip *trips, int n)
@@ -152,12 +147,12 @@ void addPassenger(Passenger passenger, Trip *trips, int n)
 }
 
 /*
- *	getBusIndex returns the corresponding bus index given a trip number.
+ *	getTripIndex returns the corresponding trip index given a trip number.
  *	Precondition: valid trip number is provided.
  *	@param tripNumber trip number from schedule (101 - 109, 150 - 160).
- *	@return index of appropriate bus in array.
+ *	@return index of appropriate trip in array.
  */
-int getBusIndex(int tripNumber)
+int getTripIndex(int tripNumber)
 {
 	int tripIndex = 0;
 	if (tripNumber >= 101 && tripNumber <= 109) {
