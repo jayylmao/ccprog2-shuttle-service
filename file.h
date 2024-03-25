@@ -40,10 +40,8 @@ void writeFile(Trip *trips, int nTrips, Date date)
         passengerCount = trips[i].passengerCount;
         
         if (passengerCount > 0) {
-            fprintf(fp, "AE%d\n", trips[i].tripNumber);
+            fprintf(fp, "%d\n", trips[i].tripNumber);
         }
-
-        fprintf(fp, "%02d-%02d-%04d\n", date.date, date.month, date.year);
 
         for (j = 0; j < passengerCount; j++) {
             passenger = trips[i].passengers[j];
@@ -69,127 +67,37 @@ void writeFile(Trip *trips, int nTrips, Date date)
     fclose(fp);
 }
 
-void readTrips(Trip *trips, Date date)
-{
-    FILE *fp;
+// void readTrips(Trip *trips, Date date)
+// {
+//     FILE *fp;
 
-    int passNum = 0;
-    // Passenger passenger;
+//     // passenger counter
+//     int passNum = 0;
+    
+//     // counter for file line
+//     int lineNum = 0;
 
-    int tripNum, busIndex;
-    // char tripBus[6];
+//     int tripNum, busIndex;
+//     // char tripBus[6];
 
-    char buffer[200];
-	char destPath[MAX];
+//     char buffer[200];
+// 	char destPath[MAX];
 
-    bool tripDetected = false;
+//     bool tripDetected = false;
 
-    snprintf(destPath, sizeof(destPath), "./trips/%02d-%02d-%04d.txt", date.date, date.month, date.year);
+//     snprintf(destPath, sizeof(destPath), "./trips/%02d-%02d-%04d.txt", date.date, date.month, date.year);
 
-    fp = fopen(destPath, "r");
+//     fp = fopen(destPath, "r");
 
-    if (fp == NULL) {
-        printf("Warning: Could not find file %02d-%02d-%04d.txt at directory ./trips/.\n",
-		date.date, date.month, date.year);
-    } else {
-
-        // while file not at EOF
-        while (fscanf(fp, "%s", buffer) != -1) {
-            printf("Trip Number Buffer: %s\n", buffer);
-
-            // if line detects string starts with AE
-            if (strncmp(buffer, "AE", 2) == 0) {
-                sscanf(buffer, "AE%d", &tripNum);
-
-                printf("Trip Number Found: AE %d\n", tripNum);
-
-                busIndex = getBusIndex(tripNum);
-
-                printf("Found Bus index: %d\n", busIndex);
-
-                tripDetected = false;
-                
-                fgets(buffer, 200, fp);
-            }
-
-            do
-            {
-                // setEmbarkPt(tripNum, &trips[busIndex].passengers[passNum].embarkPt);
-                if (tripNum >= 101 && tripNum <= 109) {
-                    trips[busIndex].passengers[passNum].embarkPt = 1;
-                } else if (tripNum >= 150 && tripNum <= 160) {
-                    trips[busIndex].passengers[passNum].embarkPt = 2;
-                }
-                
-                printf("Embark Point #: %d\n", trips[busIndex].passengers[passNum].embarkPt);
-                
-                fgets(buffer, 200, fp);
-
-                fscanf(fp, "%s%s", 
-                    trips[busIndex].passengers[passNum].Name.firstName, 
-                    trips[busIndex].passengers[passNum].Name.lastName
-                );
-                printf("Name: %s %s\n", 
-                    trips[busIndex].passengers[passNum].Name.firstName, 
-                    trips[busIndex].passengers[passNum].Name.lastName
-                );
-
-                fscanf(fp, "%s", 
-                    trips[busIndex].passengers[passNum].id);
-                printf("ID: %s\n", 
-                    trips[busIndex].passengers[passNum].id);
-
-                fscanf(fp, "%d", 
-                    &trips[busIndex].passengers[passNum].priorityNumber);
-                printf("Priority Number: %d\n", 
-                    trips[busIndex].passengers[passNum].priorityNumber);
-
-                fscanf(fp, "%s", buffer);
-
-                sscanf(buffer, "%2d-%2d-%4d", 
-                    &date.date, 
-                    &date.month,
-                    &date.year
-                );
-
-                printf("Date: %.2d-%.2d-%.4d\n", 
-                    date.date, 
-                    date.month,
-                    date.year
-                );
-                
-                fgets(buffer, 200, fp);
-                fgets(buffer, 200, fp);
-
-                fscanf(fp, "%d", 
-                    &trips[busIndex].passengers[passNum].dropOffPt);
-                printf("Drop-off Point: %d\n", 
-                    trips[busIndex].passengers[passNum].dropOffPt);
-                
-                passNum++;
-
-                fscanf(fp, "%s", buffer);
-                printf("\nCurrent Line After Passenger: %s\n", buffer);
-
-                // if new bus number is found (a little brute force way)
-                if (strncmp(buffer, "AE", 2) == 0) {
-                    printf(" (Loop Broken!)\n");
-                    trips[busIndex].passengerCount = passNum;
-                    printf("\nPassengers Counted: %d\n\n", passNum);
-
-                    passNum = 0;
-
-                    sscanf(buffer, "AE%d", &tripNum);
-                    printf("Trip Number Found: AE %d\n", tripNum);
-
-                    busIndex = getBusIndex(tripNum);
-
-                    printf("Found New Bus index: %d\n", busIndex);
-
-                    tripDetected = true;
-                }
-
-            } while (!tripDetected);
-        }
-    }
-}
+//     if (fp == NULL) {
+//         printf("ERROR: Could not find file %02d-%02d-%04d.txt at directory ./trips/.\n",
+// 		date.date, date.month, date.year);
+//     } else {
+//         // while file not at EOF
+//         while (fscanf(fp, "%s", buffer) != -1) {
+//             fscanf(fp, "%s", buffer);
+            
+//             lineNum++;
+//         }
+//     }
+// }
