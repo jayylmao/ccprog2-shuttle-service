@@ -6,35 +6,6 @@
 #define LOAD_FILE '6'
 #define PERSONNEL_EXIT '7'
 
-#define TRIP_COUNT 22
-
-// ANSI Color escape sequences courtesy of https://stackoverflow.com/questions/3219393/stdlib-and-colored-output-in-c
-#define RED     "\x1b[31m"
-#define GREEN   "\x1b[32m"
-#define YELLOW  "\x1b[33m"
-#define BLUE    "\x1b[34m"
-#define MAGENTA "\x1b[35m"
-#define CYAN    "\x1b[36m"
-#define RESET   "\x1b[0m"
-
-/*
- *	printHeader displays the standard header at the top of every screen in the program.
- *	Precondition: Positive integer header size provided.
- *	@param *message Message to be printed in between the brackets.
- *	@param headerSize Length of header.
- */
-void printHeader(char *message, int headerSize)
-{
-	int i, msgLength = strlen(message);
-	printf("======[ %s ]", message);
-
-	for (i = 0; i < headerSize - (msgLength + 10); i++) {
-		printf("=");
-	}
-
-	printf("\n\n");
-}
-
 /*
  *	viewPassCount shows the number of passengers on a specified trip.
  *	Precondition: trips[] array exists.
@@ -96,8 +67,7 @@ void viewPassAtDrop(Trip trips[], int nTrips)
 				dropOffCounter[dropOffPt - 1]++;
 			}
 
-			switch (trip.embarkPt)
-			{
+			switch (trip.embarkPt) {
 			case 0:
 				if (trip.route == 0) {
 					printf(YELLOW"Trip %d:" RESET " Via Mamplasan exit\n", trip.tripNumber);
@@ -179,7 +149,7 @@ void searchPass(Trip trips[], int nTrips)
 			for (j = 0; j < trips[i].passengerCount; j++) {
 				passenger = trips[i].passengers[j];
 				
-				if (strcmp(passenger.Name.lastName, input) == 0) {
+				if (strcmp(passenger.name.lastName, input) == 0) {
 					output[passengersFound] = passenger;
 					passengersFound++;
 				}
@@ -189,7 +159,7 @@ void searchPass(Trip trips[], int nTrips)
 		for (i = 0; i < passengersFound; i++) {
 			passenger = output[i];
 			printf("%d.\n", i + 1);
-			printf(YELLOW"Name    :" RESET " %s %s\n", passenger.Name.firstName, passenger.Name.lastName);
+			printf(YELLOW"Name    :" RESET " %s %s\n", passenger.name.firstName, passenger.name.lastName);
 			printf(YELLOW"ID      :" RESET " %s\n", passenger.id);
 			printf(YELLOW"Priority:" RESET " %d\n", passenger.priorityNumber);
 		}

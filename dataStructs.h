@@ -8,18 +8,20 @@ struct Date {
 
 typedef struct Date Date;
 
-struct Passenger {
-	// personally identifiable information.
-	struct Name {
-		char firstName[MAX];
-		char lastName[MAX];
-	} Name;
+// personally identifiable information.
+struct Name {
+	char firstName[MAX];
+	char lastName[MAX];
+};
 
+typedef struct Name Name;
+
+struct Passenger {
+	Name name;
 	char id[8];
 	int priorityNumber;
 
 	// trip information
-	char route[MAX];
 	int tripNumber;
 	int dropOffPt;
 };

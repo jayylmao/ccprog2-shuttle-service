@@ -7,8 +7,7 @@
  */
 void setDropOffPt(int dropOffPt, char *dropOffString)
 {
-	switch (dropOffPt)
-	{
+	switch (dropOffPt) {
 	case 1:
 		strcpy(dropOffString, "Mamplasan Toll Exit");
 		break;
@@ -85,7 +84,7 @@ void writeFile(Trip *trips, int nTrips, Date date)
 			passenger = trips[i].passengers[j];
 
 			// write passenger data to file.
-			fprintf(fp, "%s %s\n", passenger.Name.firstName, passenger.Name.lastName);
+			fprintf(fp, "%s %s\n", passenger.name.firstName, passenger.name.lastName);
 			fprintf(fp, "%s\n", passenger.id);
 			fprintf(fp, "%d\n", passenger.priorityNumber);
 
@@ -144,8 +143,7 @@ int readTrips(Trip trips[], Date date)
 
 		}
 
-		switch (lineNum)
-		{
+		switch (lineNum) {
 		case 1:
 			passNum++;
 			break;

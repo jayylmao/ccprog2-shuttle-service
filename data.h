@@ -1,9 +1,6 @@
-#define MAX_PASSENGERS 16
-#define TRIP_COUNT 22
-
 /*
  *	getTripNumber returns the trip number given the trip index.
- *	Precondition: tripIndex is a valid array index (positive int that does not exceed array length).
+ *	Precondition: tripIndex is a valid integer.
  *	@param tripIndex index of trip in array.
  *	@return Trip number.
  */
@@ -14,6 +11,8 @@ int getTripNumber(int tripIndex)
 		tripNumber += 101 + tripIndex;
 	} else if (tripIndex >= 9 && tripIndex <= 19) {
 		tripNumber += 141 + tripIndex;
+	} else {
+		tripNumber = -1;
 	}
 
 	return tripNumber;
@@ -21,7 +20,7 @@ int getTripNumber(int tripIndex)
 
 /*
  *	getTripIndex returns the corresponding trip index given a trip number.
- *	Precondition: valid trip number is provided.
+ *	Precondition: Valid integer is provided.
  *	@param tripNumber trip number from schedule (101 - 109, 150 - 160).
  *	@return index of appropriate trip in array.
  */
@@ -32,6 +31,8 @@ int getTripIndex(int tripNumber)
 		tripIndex = tripNumber - 101;
 	} else if (tripNumber >= 150 && tripNumber <= 160) {
 		tripIndex = tripNumber - 141;
+	} else {
+		tripIndex = -1;
 	}
 
 	return tripIndex;
@@ -79,8 +80,7 @@ void initializeBuses(Trip trips[], int nTrips)
  */
 void setEmbarkName(int embarkPtInt, char embarkName[])
 {
-	switch (embarkPtInt)
-	{
+	switch (embarkPtInt) {
 	case 0:
 		strcpy(embarkName, "South Gate Driveway (Manila Campus)");
 		break;
