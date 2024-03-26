@@ -45,8 +45,9 @@ void printHeader(char *message, int headerSize)
 void viewPassCount(Trip trips[], int nTrips)
 {
 	int input, i;
+	printHeader(YELLOW"Passenger Count Viewer"RESET, 80);
+
 	do {
-		printHeader(YELLOW"Passenger Count Viewer"RESET, 80);
 		printf(BLUE"Enter a trip number, or type 0 to return: AE");
 		scanf("%d", &input);
 		printf(RESET);
@@ -54,14 +55,14 @@ void viewPassCount(Trip trips[], int nTrips)
 		// iterate through each trip in the array.
 		for (i = 0; i < nTrips; i++) {
 			if (trips[i].tripNumber == input) {
-				printf(YELLOW"Number of passengers on trip AE%d"RESET": %d\n", trips[i].tripNumber, trips[i].passengerCount);
+				printf(YELLOW"Number of passengers on trip AE%d"RESET": %d\n\n", trips[i].tripNumber, trips[i].passengerCount);
 			}
 		}
 	} while (input != 0);
 }
 
 /*
- *	viewPassAtDrop shows the number of passengers at each drop off point.
+ *	viewPassAtDrop shows the number of passengers at each drop off point in a trip.
  *	Precondition: trips[] array exists.
  *	@param trips[] Array containing all trips in memory.
  *	@param nTrips Number of trips in the array.
@@ -69,9 +70,13 @@ void viewPassCount(Trip trips[], int nTrips)
  */
 void viewPassAtDrop(Trip trips[], int nTrips)
 {
-	int input, i, j;
+	int input, i, tripIndex, dropOffPt;
+	
+	int dropOffCounter[13] = {};
+
+	printHeader(YELLOW"Drop-off Point Passenger Count Viewer"RESET, 80);
+
 	do {
-		printHeader(YELLOW"Drop-off Point Passenger Count Viewer"RESET, 80);
 		printf(BLUE"Enter a trip number, or 0 to return: AE");
 		scanf("%d", &input);
 		printf(RESET);
@@ -79,14 +84,53 @@ void viewPassAtDrop(Trip trips[], int nTrips)
 		Trip trip;
 		Passenger passenger;
 
-		for (i = 0; i < nTrips; i++) {
-			trip = trips[i];
+		tripIndex = getTripIndex(input);
 
-			for (j = 0; j < trip.passengerCount; j++) {
-				passenger = trip.passengers[j];
-				// TODO: finish this function. this will be removed and is just to avoid the warning.
-				printf("%s", passenger.Name.firstName);
+		if (tripIndex != -1) {
+			trip = trips[getTripIndex(input)];
+
+			for (i = 0; i < trip.passengerCount; i++) {
+				passenger = trip.passengers[i];
+				dropOffPt = passenger.dropOffPt;
+
+				dropOffCounter[dropOffPt - 1]++;
 			}
+
+			switch (trip.embarkPt)
+			{
+			case 0:
+				if (trip.route == 0) {
+					printf(YELLOW"Trip %d:" RESET " Via Mamplasan exit\n", trip.tripNumber);
+					printf(YELLOW"[1.] Mamplasan Toll Exit:" RESET " %d\n", dropOffCounter[0]);
+					printf(YELLOW"[2.] Phase 5, San Jose Village:" RESET " %d\n", dropOffCounter[1]);
+					printf(YELLOW"[3.] Milagros Del Rosario Building - East Canopy:" RESET " %d\n", dropOffCounter[2]);
+				} else {
+					printf(YELLOW"Trip %d:" RESET " Via ETON exit\n", trip.tripNumber);
+					printf(YELLOW"[1.] Laguna Blvd. Guard House:" RESET " %d\n,", dropOffCounter[3]);
+					printf(YELLOW"[2.] Milagros Del Roasrio Building - East Canopy:" RESET " %d\n", dropOffCounter[4]);
+				}
+				break;
+			case 1:
+				if (trip.route == 0) {
+					printf(YELLOW"Trip %d:" RESET " Via Estrada\n", trip.tripNumber);
+					printf(YELLOW"[1.] Petron Gasoline Station along Gil Puyat Avenue:" RESET " %d\n", dropOffCounter[5]);
+					printf(YELLOW"[2.] Gate 4: Gokongwei Gate:" RESET " %d\n", dropOffCounter[6]);
+					printf(YELLOW"[3.] Gate 2: North Gate (HSSH):" RESET " %d\n", dropOffCounter[7]);
+					printf(YELLOW"[4.] Gate 1: South Gate (LS Building Entrance):" RESET " %d\n", dropOffCounter[8]);
+				} else {
+					printf(YELLOW"Trip %d:" RESET " Via Buendia/LRT\n", trip.tripNumber);
+					printf(YELLOW"[1.] College of St. Benilde (CSB) Along Taft:" RESET " %d\n", dropOffCounter[9]);
+					printf(YELLOW"[2.] Gate 4: Gokongwei Gate:" RESET " %d\n", dropOffCounter[10]);
+					printf(YELLOW"[3.] Gate 2: North Gate (HSSH):" RESET " %d\n", dropOffCounter[11]);
+					printf(YELLOW"[4.] Gate 1: South Gate (LS Building Entrance):" RESET " %d\n", dropOffCounter[12]);
+				}
+			default:
+				break;
+			}
+			
+			printf("\n");
+		} else {
+			printf(YELLOW"[*]: Invalid trip number entered."RESET);
 		}
 	} while (input != 0);
 }
@@ -118,8 +162,9 @@ void searchPass(Trip trips[], int nTrips)
 
 	system("clear||cls");
 
+	printHeader(YELLOW"Passenger Search"RESET, 80);
+
 	do {
-		printHeader(YELLOW"Passenger Search"RESET, 80);
 		printf(BLUE"Enter the last name of the passenger to search for, or type 0 to return: "RESET);
 		scanf("%s", input);
 
@@ -144,8 +189,7 @@ void searchPass(Trip trips[], int nTrips)
 
 		// error message when no passengers are found.
 		if (!passengersFound) {
-			system("clear||cls");
-			printf(YELLOW"[*]: No passengers found with that last name.\n"RESET);
+			printf(YELLOW"[*]: No passengers found with that last name.\n\n"RESET);
 		}
 	} while (strcmp(input, "0") != 0);
 }
