@@ -1,4 +1,4 @@
-#include "passenger.h"
+#include "dataStructs.h"
 #include "data.h"
 #include "file.h"
 #include "personnel.h"
@@ -219,6 +219,17 @@ void passengerRoutine(Date date, Trip *trips, int nTrips)
 {
 	Passenger passenger;
 	Trip trip;
+	int page = 0;
+
+	switch (page)
+	{
+	case 0:
+		printHeader(GREEN"Add passenger"RESET, 80);
+
+		break;
+	default:
+		break;
+	}
 	printf("Enter your trip number: AE");
 	scanf("%d", &passenger.tripNumber);
 

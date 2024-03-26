@@ -124,6 +124,7 @@ void viewPassAtDrop(Trip trips[], int nTrips)
 					printf(YELLOW"[3.] Gate 2: North Gate (HSSH):" RESET " %d\n", dropOffCounter[11]);
 					printf(YELLOW"[4.] Gate 1: South Gate (LS Building Entrance):" RESET " %d\n", dropOffCounter[12]);
 				}
+				break;
 			default:
 				break;
 			}
@@ -151,6 +152,12 @@ void loadPassInfo()
 
 }
 
+/*
+ *	searchPass prompts the user to enter a passenger's last name and searches through all trips in memory.
+ *	Precondition: Valid number of trips given.
+ *	@param trips[] List of trips to check.
+ *	@param nTrips Number of trips in list.
+ */
 void searchPass(Trip trips[], int nTrips)
 {
 	int i, j, passengersFound = 0;
@@ -183,7 +190,7 @@ void searchPass(Trip trips[], int nTrips)
 			passenger = output[i];
 			printf("%d.\n", i + 1);
 			printf(YELLOW"Name    :" RESET " %s %s\n", passenger.Name.firstName, passenger.Name.lastName);
-			printf(YELLOW "ID      :" RESET " %s\n", passenger.id);
+			printf(YELLOW"ID      :" RESET " %s\n", passenger.id);
 			printf(YELLOW"Priority:" RESET " %d\n", passenger.priorityNumber);
 		}
 
