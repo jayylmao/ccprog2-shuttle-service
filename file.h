@@ -1,45 +1,5 @@
 /*
- *  setDropOffPt returns the name of a drop-off point given its integer representation in the program.
- *  Precondition: Valid drop-off point integer given.
- *  @param dropOffPt Integer representation of drop-off point in program
- *  @param dropOffString Character array to save name of drop-off point to.
- *  @return None.
- */
-void setDropOffPt(int dropOffPt, char *dropOffString)
-{
-	switch (dropOffPt) {
-	case 1:
-		strcpy(dropOffString, "Mamplasan Toll Exit");
-		break;
-	case 2:
-		strcpy(dropOffString, "San Jose Village");
-		break;
-	case 3:
-	case 5:
-		strcpy(dropOffString, "Milagros Del Rosario (MRR) Building - East Canopy");
-		break;
-	case 4:
-		strcpy(dropOffString, "Laguna Blvd. Guard House");
-		break;
-	case 6:
-		strcpy(dropOffString, "Petron Gasoline Station along Gil Puyat Avenue");
-		break;
-	case 7:
-	case 11:
-		strcpy(dropOffString, "Gate 4: Gokongwei Gate");
-		break;
-	case 8:
-	case 12:
-		strcpy(dropOffString, "Gate 2: North Gate (HSSH)");
-		break;
-	case 9:
-	case 13:
-		strcpy(dropOffString, "Gate 1: South Gate (LS Building Entrance)");
-		break;
-	}
-}
-
-/*
+ *	Solution by: Tyrrelle Mendoza
  *  writeFile takes all the trips in the array and writes all passenger and trip info
  *  to a file specified by the date.
  *  @param *trips Pointer to array of trips whose info will be written to the file.
@@ -100,12 +60,13 @@ void writeFile(Trip *trips, int nTrips, Date date)
 }
 
 /*
+ *	Solution by: Tyrrelle Mendoza
  *  readTrips reads all trips from a file of a given date for viewing.
  *  Precondition: Valid date format given.
  *  @param date Date to base file name from.
  *  @return Success indicator.
  */
-int readTrips(Trip trips[], Date date)
+bool readTrips(Trip trips[], Date date)
 {
 	FILE *fp;
 	
@@ -113,83 +74,125 @@ int readTrips(Trip trips[], Date date)
 	int passNum = 0;
 
 	// trip index to save current data to.
-	int tripNum = -1;
+	int tripNum = 0;
 
 	// track which line is being read.
-	int lineNum = 0;
+	int lineNum = 1;
 
 	char buffer[MAX];
 	char sourcePath[MAX];
+
+	char firstName[MAX];
+	char lastName[MAX];
 
 	// create source path based on given date.
 	snprintf(sourcePath, sizeof(sourcePath), "./trips/%02d-%02d-%02d.txt", date.date, date.month, date.year);
 	fp = fopen(sourcePath, "r");
 
 	if (fp == NULL) {
-		printf("[*]: Could not find file %02d-%02d-%04d.txt in directory ./trips/.\n", date.date, date.month, date.year);
-		return 0;
+		return false;
 	}
 	
 	while (!feof(fp)) {
-		fscanf(fp, "%s", buffer);
+		lineNum = 1;
+		fscanf(fp, "%s %s", firstName, lastName);
 
-		// check if buffer in integer form is a trip number and reset 
-		if (atoi(buffer) > 101 && atoi(buffer) < 160) {
-			tripNum++;
-			trips[tripNum].tripNumber = atoi(buffer);
-			lineNum = 0;
+		//check if name contains the bus number
+		if (atoi(firstName) >= 101 && atoi(firstName) <= 161)
+		{
+			printf("Found Trip!\n");
 
-			fscanf(fp, "%s", buffer);
+			// scan the index that has trip number
+			tripNum = getTripIndex(atoi(firstName));
 
-		}
+			// use this to scan through struct
+			printf("Trip Number: AE%d\nIndex: %d\n\n", trips[tripNum].tripNumber, tripNum);
 
-		switch (lineNum) {
-		case 1:
-			passNum++;
-			break;
-		
-		default:
-			break;
+			//get newline
+			fgets(buffer, MAX, fp);
+		} else {
+			while (lineNum)
+			{
+				switch(lineNum)
+				{
+					case 1:
+						strcpy(trips[tripNum].passengers[passNum].name.firstName, firstName);
+						strcpy(trips[tripNum].passengers[passNum].name.lastName, lastName);
+						printf("Name: %s %s\n", firstName, lastName);
+						break;
+					case 2:
+						// get ID buffer
+						fscanf(fp, "%s", buffer);
+						
+						strcpy(trips[tripNum].passengers[passNum].id, buffer);
+						printf("ID: %s\n", buffer);
+						break;
+					case 3:
+						// get Priority buffer
+						fscanf(fp, "%s", buffer);
+					
+						trips[tripNum].passengers[passNum].priorityNumber = atoi(buffer);
+						printf("Priority: %d\n\n", atoi(buffer));
+
+						break;
+					case 4:
+						// catch drop-off
+						// make a function that can return the int value of dropoffPt
+						
+						fgets(buffer, MAX, fp);
+						passNum++;
+						break;
+					default:
+						break;
+				}
+
+				// catch newline
+				fgets(buffer, MAX, fp);
+
+				if (lineNum == 4) lineNum = 0;
+				else lineNum++;
+			}
 		}
 	}
 
-	printf("%d", passNum); // temp
+	printf("Passengers: %d\n", passNum); // temp
 
 	fclose(fp);
-	return 1;
+	return true;
 }
 
-// void readTrips(Trip *trips, Date date)
-// {
-//     FILE *fp;
+/*
+ *	Solution by: Tyrrelle Mendoza
+ *	loadPassInfo allows the user to load passengers into memory from a file, overwriting current data. 
+ *	TODO: read successful but loading into memory fails.
+ *	@param trips[] List of trips in memory.
+ *	@param nTrips Number of trips in array.
+ *	@return None.
+ */
+void loadPassInfo(Trip trips[], int nTrips)
+{
+	Trip newTrips[nTrips];
+	Date dateStruct;
+	int i, success;
 
-//     // passenger counter
-//     int passNum = 0;
+	initializeBuses(trips, TRIP_COUNT);
+
+	printf("Enter a date to view (DD MM YYYY): ");
+	scanf("%d %d %d", &dateStruct.date, &dateStruct.month, &dateStruct.year);
 	
-//     // counter for file line
-//     int lineNum = 0;
+	success = readTrips(newTrips, dateStruct);
 
-//     int tripNum, busIndex;
-//     // char tripBus[6];
+	if (success)
+	{
+		printf("Successfully Loaded New Trip Data!\n");
 
-//     char buffer[200];
-// 	char destPath[MAX];
+		for (i = 0; i < nTrips; i++)
+		{
+			trips[i] = newTrips[i];
+		}
 
-//     bool tripDetected = false;
-
-//     snprintf(destPath, sizeof(destPath), "./trips/%02d-%02d-%04d.txt", date.date, date.month, date.year);
-
-//     fp = fopen(destPath, "r");
-
-//     if (fp == NULL) {
-//         printf("ERROR: Could not find file %02d-%02d-%04d.txt at directory ./trips/.\n",
-// 		date.date, date.month, date.year);
-//     } else {
-//         // while file not at EOF
-//         while (fscanf(fp, "%s", buffer) != -1) {
-//             fscanf(fp, "%s", buffer);
-			
-//             lineNum++;
-//         }
-//     }
-// }
+	} else {
+		printf("Error Loading New Trip Data...\n");
+	}
+	
+}

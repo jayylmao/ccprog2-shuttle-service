@@ -1,12 +1,5 @@
-#define VIEW_PASSENGERS_COUNT '1'
-#define VIEW_PASSENGERS_AT_DROP '2'
-#define VIEW_PASSENGER_INFO '3'
-#define LOAD_PASSENGER_INFO '4'
-#define SEARCH '5'
-#define LOAD_FILE '6'
-#define PERSONNEL_EXIT '7'
-
 /*
+ *	Solution by: Jay Carlos
  *	viewPassCount shows the number of passengers on a specified trip.
  *	Precondition: trips[] array exists.
  *	@param trips[] Array containing all trips in memory.
@@ -30,9 +23,12 @@ void viewPassCount(Trip trips[], int nTrips)
 			}
 		}
 	} while (input != 0);
+
+	system("clear||cls");
 }
 
 /*
+ *	Solution by: Jay Carlos
  *	viewPassAtDrop shows the number of passengers at each drop off point in a trip.
  *	Precondition: trips[] array exists.
  *	@param trips[] Array containing all trips in memory.
@@ -41,13 +37,21 @@ void viewPassCount(Trip trips[], int nTrips)
  */
 void viewPassAtDrop(Trip trips[], int nTrips)
 {
-	int input, i, tripIndex, dropOffPt;
+	int input, i, dropOffPt;
+	int tripIndex = -1;
 	
-	int dropOffCounter[13] = {};
-
-	printHeader(YELLOW"Drop-off Point Passenger Count Viewer"RESET, 80);
+	int dropOffCounter[13];
 
 	do {
+		// reset counters after each iteration.
+		for (i = 0; i < 13; i++) {
+			dropOffCounter[i] = 0;
+		}
+
+		if (tripIndex == -1) {
+			printHeader(YELLOW"Drop-off Point Passenger Count Viewer"RESET, 80);
+		}
+
 		printf(BLUE"Enter a trip number, or 0 to return: AE");
 		scanf("%d", &input);
 		printf(RESET);
@@ -101,9 +105,12 @@ void viewPassAtDrop(Trip trips[], int nTrips)
 			
 			printf("\n");
 		} else {
-			printf(YELLOW"[*]: Invalid trip number entered."RESET);
+			system("clear||cls");
+			printf(YELLOW"[*]: Invalid trip number entered.\n"RESET);
 		}
 	} while (input != 0);
+
+	system("clear||cls");
 }
 
 void viewPassInfo(Trip trips[], int nTrips)
@@ -115,14 +122,12 @@ void viewPassInfo(Trip trips[], int nTrips)
 	for (i = 0; i < nTrips; i++) {
 		
 	}
-}
 
-void loadPassInfo()
-{
-
+	system("clear||cls");
 }
 
 /*
+ *	Solution by: Jay Carlos
  *	searchPass prompts the user to enter a passenger's last name and searches through all trips in memory.
  *	Precondition: Valid number of trips given.
  *	@param trips[] List of trips to check.
@@ -139,9 +144,15 @@ void searchPass(Trip trips[], int nTrips)
 
 	system("clear||cls");
 
-	printHeader(YELLOW"Passenger Search"RESET, 80);
-
 	do {
+		// reset passengers found to 0 after each iteration to allow previous searches
+		// to be overwritten.
+		passengersFound = 0;
+
+		if (!passengersFound) {
+			printHeader(YELLOW"Passenger Search"RESET, 80);
+		}
+
 		printf(BLUE"Enter the last name of the passenger to search for, or type 0 to return: "RESET);
 		scanf("%s", input);
 
@@ -166,22 +177,49 @@ void searchPass(Trip trips[], int nTrips)
 
 		// error message when no passengers are found.
 		if (!passengersFound) {
-			printf(YELLOW"[*]: No passengers found with that last name.\n\n"RESET);
+			system("clear||cls");
+			printf(YELLOW"[*]: No passengers found with that last name.\n"RESET);
 		}
 	} while (strcmp(input, "0") != 0);
+
+	system("clear||cls");
 }
 
-void loadFile()
+/*
+ *	Solution by: Tyrrelle Mendoza
+ *	viewRecentFile lets the user select a file to view, without overwriting the current data in memory.
+ *	Precondition: None.
+ *	@return None.
+ */
+void viewRecentFile()
 {
+	
 	Trip trips[TRIP_COUNT];
 	Date dateStruct;
-	int success;
+	bool exit = false;
+	bool success = false;
+
+	initializeBuses(trips, TRIP_COUNT);
 
 	do {
-		printf("Enter a date to view (DD MM YYYY): ");
+		if (!success && !exit) {
+			printHeader(YELLOW"View file"RESET, 80);
+		}
+		
+		printf(BLUE"Enter a date to view (DD MM YYYY), or 0 0 0 to return: "RESET);
 		scanf("%d %d %d", &dateStruct.date, &dateStruct.month, &dateStruct.year);
 
-		success = readTrips(trips, dateStruct);
-		printf("%d", success); // temp
-	} while(dateStruct.date != 0);
+		if (dateStruct.date == 0 && dateStruct.month == 0 && dateStruct.year == 0) {
+			exit = true;
+		} else {
+			success = readTrips(trips, dateStruct);
+		}
+
+		if (!success && !exit) {
+			system("clear||cls");
+			printf(YELLOW"[*]: Could not find file %02d-%02d-%04d.txt in directory ./trips/.\n"RESET, dateStruct.date, dateStruct.month, dateStruct.year);
+		}
+	} while(!exit);
+
+	system("clear||cls");
 }

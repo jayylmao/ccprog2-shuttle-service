@@ -12,6 +12,7 @@
 #define MAX_PASSENGERS 16
 
 /*
+ *	Solution by: Jay Carlos
  *	printHeader displays the standard header at the top of every screen in the program.
  *	Precondition: Positive integer header size provided.
  *	@param *message Message to be printed in between the brackets.
@@ -22,7 +23,7 @@ void printHeader(char *message, int headerSize)
 	int i, msgLength = strlen(message);
 	printf("======[ %s ]", message);
 
-	for (i = 0; i < headerSize - (msgLength + 10); i++) {
+	for (i = 0; i < headerSize - (msgLength + 1); i++) {
 		printf("=");
 	}
 
@@ -40,7 +41,16 @@ void printHeader(char *message, int headerSize)
 #define PERSONNEL '2'
 #define EXIT '3'
 
+#define VIEW_PASSENGERS_COUNT '1'
+#define VIEW_PASSENGERS_AT_DROP '2'
+#define VIEW_PASSENGER_INFO '3'
+#define LOAD_PASSENGER_INFO '4'
+#define SEARCH '5'
+#define LOAD_FILE '6'
+#define PERSONNEL_EXIT '7'
+
 /*
+ *	Solution by: Jay Carlos
  *	personnelMenu allows personnel to access the functions available to them.
  *	Precondition: Called from main menu.
  *	@param trips[] List of trips.
@@ -91,13 +101,13 @@ void personnelMenu(Trip trips[], Date date)
 			viewPassInfo(trips, TRIP_COUNT);
 			break;
 		case LOAD_PASSENGER_INFO:
-			loadPassInfo();
+			loadPassInfo(trips, TRIP_COUNT);
 			break;
 		case SEARCH:
 			searchPass(trips, TRIP_COUNT);
 			break;
 		case LOAD_FILE:
-			loadFile();
+			viewRecentFile();
 			break;
 		case PERSONNEL_EXIT:
 			break;
@@ -110,6 +120,7 @@ void personnelMenu(Trip trips[], Date date)
 }
 
 /*
+ *	Solution by: Jay Carlos
  *	mainMenu allows the user to choose between the program's main routines.
  *	The other routines should return to this one.
  *	Precondition: Called from driver program.
@@ -124,27 +135,29 @@ void mainMenu()
 	initializeBuses(trips, TRIP_COUNT);
 
 	Date dateStruct;
-	int date, month, year;
+	char dateInput[3], monthInput[3], yearInput[5];
 
 	system("clear||cls");
 
 	printHeader(YELLOW"System Initialization"RESET, 80);
 	
 	do {
-		printf(BLUE"Please enter the current date (DD MM YYYY): ");
-		scanf("%d %d %d", &date, &month, &year);
+		printf(BLUE"Please enter the current date (DD MM YYYY): "RESET);
+		scanf("%s %s %s", dateInput, monthInput, yearInput);
 
-		if ((date < 1 || date > 31) || (month < 1 || month > 12) || year < 1) {
-			printf(YELLOW"[*]: Enter a valid date (DD MM YYYY)\n");
+		dateStruct.date = atoi(dateInput);
+		dateStruct.month = atoi(monthInput);
+		dateStruct.year = atoi(yearInput);
+
+		if ((dateStruct.date < 1 || dateStruct.date > 31) || (dateStruct.month < 1 || dateStruct.month > 12) || dateStruct.year < 1) {
+			system("clear||cls");
+			printHeader(YELLOW"System Initialization"RESET, 80);
+			printf(YELLOW"[*]: Enter a valid date (DD MM YYYY)\n"RESET);
 		}
-	} while ((date < 1 || date > 31) || (month < 1 || month > 12) || year < 1);
+	} while ((dateStruct.date < 1 || dateStruct.date > 31) || (dateStruct.month < 1 || dateStruct.month > 12) || dateStruct.year < 1);
 
 	printf(RESET);
 	system("clear||cls");
-
-	dateStruct.date = date;
-	dateStruct.month = month;
-	dateStruct.year = year;
 
 	do {
 		printHeader(GREEN"Arrows Express Trip System"RESET, 80);

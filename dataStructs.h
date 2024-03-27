@@ -8,7 +8,6 @@ struct Date {
 
 typedef struct Date Date;
 
-// personally identifiable information.
 struct Name {
 	char firstName[MAX];
 	char lastName[MAX];
@@ -17,6 +16,7 @@ struct Name {
 typedef struct Name Name;
 
 struct Passenger {
+	// personally identifiable information.
 	Name name;
 	char id[8];
 	int priorityNumber;
@@ -37,7 +37,6 @@ struct Trip {
 	int embarkPt;
 	int route;
 
-	bool isFull;
 	bool isEmergencyShuttle;
 };
 
