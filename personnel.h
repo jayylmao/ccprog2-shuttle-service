@@ -299,6 +299,7 @@ void viewRecentFile()
 /*
  *	addPassInfo lets you add passengers from a file instead of inputting them manually.
  *	Note that this file follows a different format from the program output.
+ *	Solution by: Jay Carlos
  *	Precondition: File is formatted properly.
  *	@param trips[] List of trips to add passengers to.
  *	@param nTrips Number of trips in list.
@@ -377,43 +378,43 @@ void addPassInfo(Trip trips[], int nTrips)
 	system("clear||cls");
 }
 
-/*
- *	loadPassInfo allows the user to load passengers into memory from a file, overwriting current data. 
- *	Solution by: Tyrrelle Mendoza
- *	@param trips[] List of trips in memory.
- *	@param nTrips Number of trips in array.
- *	@return None.
- */
-void loadPassInfo(Trip trips[], int nTrips)
-{
-	Trip newTrips[nTrips];
-	Date dateStruct;
-	char date[MAX], month[MAX], year[MAX];
-	int i, success;
+// /*
+//  *	loadPassInfo allows the user to load passengers into memory from a file, overwriting current data. 
+//  *	Solution by: Tyrrelle Mendoza
+//  *	@param trips[] List of trips in memory.
+//  *	@param nTrips Number of trips in array.
+//  *	@return None.
+//  */
+// void loadPassInfo(Trip trips[], int nTrips)
+// {
+// 	Trip newTrips[nTrips];
+// 	Date dateStruct;
+// 	char date[MAX], month[MAX], year[MAX];
+// 	int i, success;
 
-	initializeBuses(trips, TRIP_COUNT);
-	initializeBuses(newTrips, TRIP_COUNT);
+// 	initializeBuses(trips, TRIP_COUNT);
+// 	initializeBuses(newTrips, TRIP_COUNT);
 
-	printHeader(YELLOW"Load passengers from file"RESET, 80);
-	do {
-		printf(BLUE"Enter a date to view (DD MM YYYY): "RESET);
-		scanf("%s %s %s", date, month, year);
+// 	printHeader(YELLOW"Load passengers from file"RESET, 80);
+// 	do {
+// 		printf(BLUE"Enter a date to view (DD MM YYYY): "RESET);
+// 		scanf("%s %s %s", date, month, year);
 
-		dateStruct.date = atoi(date);
-		dateStruct.month = atoi(month);
-		dateStruct.year = atoi(year);
+// 		dateStruct.date = atoi(date);
+// 		dateStruct.month = atoi(month);
+// 		dateStruct.year = atoi(year);
 		
-		success = readTrips(newTrips, dateStruct);
+// 		success = readTrips(newTrips, dateStruct);
 
-		system("clear||cls");
-		printHeader(YELLOW"Load passengers from file"RESET, 80);
+// 		system("clear||cls");
+// 		printHeader(YELLOW"Load passengers from file"RESET, 80);
 
-		if (success) {
-			for (i = 0; i < nTrips; i++) {
-				trips[i] = newTrips[i];
-			}
-		} else {
-			printf(YELLOW"[*]: Could not find file %s-%s-%s.\n"RESET, date, month, year);
-		}
-	} while (!success);
-}
+// 		if (success) {
+// 			for (i = 0; i < nTrips; i++) {
+// 				trips[i] = newTrips[i];
+// 			}
+// 		} else {
+// 			printf(YELLOW"[*]: Could not find file %s-%s-%s.\n"RESET, date, month, year);
+// 		}
+// 	} while (!success);
+// }

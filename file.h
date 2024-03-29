@@ -34,11 +34,9 @@ void writeFile(Trip *trips, int nTrips, Date date)
 	for (i = 0; i < nTrips; i++) {
 		passengerCount = trips[i].passengerCount;
 		
-		if (passengerCount > 0) {
-			fprintf(fp, "%d\n", trips[i].tripNumber);
-			getEmbarkationPointName(trips[i].embarkPt, embarkPoint);
-			fprintf(fp, "%s\n", embarkPoint);
-		}
+		fprintf(fp, "%d\n", trips[i].tripNumber);
+		getEmbarkationPointName(trips[i].embarkPt, embarkPoint);
+		fprintf(fp, "%s\n", embarkPoint);
 
 		for (j = 0; j < passengerCount; j++) {
 			passenger = trips[i].passengers[j];
@@ -50,8 +48,9 @@ void writeFile(Trip *trips, int nTrips, Date date)
 
 			getDropOffName(passenger.dropOffPt, dropOffPoint);
 			fprintf(fp, "%s\n", dropOffPoint);
-			
-			// add extra newline for all other passengers as per MP specs.
+		}
+
+		if (passengerCount == 0) {
 			fprintf(fp, "\n");
 		}
 	}

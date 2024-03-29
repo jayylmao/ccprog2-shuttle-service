@@ -205,7 +205,7 @@ void personnelMenu(Trip trips[], Date date)
 		printf(YELLOW"[3.] View passenger information \n"RESET);
 		printf("Input a trip number to view all passengers on that trip.\n\n");
 
-		printf(YELLOW"[4.] Overwrite data from file \n"RESET);
+		printf(YELLOW"[4.] Overwrite data from file [may be deprecated] \n"RESET);
 		printf("Select a file to load data from, overwriting current data.\n\n");
 
 		printf(YELLOW"[5.] Search passenger \n"RESET);
@@ -236,7 +236,7 @@ void personnelMenu(Trip trips[], Date date)
 			viewPassInfo(trips, TRIP_COUNT);
 			break;
 		case '4':
-			loadPassInfo(trips, TRIP_COUNT);
+			// loadPassInfo(trips, TRIP_COUNT);
 			break;
 		case '5':
 			searchPass(trips, TRIP_COUNT);
