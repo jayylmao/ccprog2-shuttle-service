@@ -284,14 +284,14 @@ bool reviewDetails(Passenger passenger, int embarkPt, int route, Trip trips[])
 
 		displayTrip(passenger.tripNumber, trips);
 
-		printf("\n\nPersonal Information\n");
+		printf("\n\n[Personal Information]\n");
 		printf(GREEN"Name          : "RESET"%s %s\n", passenger.name.firstName, passenger.name.lastName);
 		printf(GREEN"ID            : "RESET"%s\n", passenger.id);
 
 		getPriorityGroupName(passenger.priorityNumber, priorityName);
 		printf(GREEN"Priority Group: "RESET"%s (%d)\n", priorityName, passenger.priorityNumber);
 		
-		printf("\nTrip Information\n");
+		printf("\n[Trip Information]\n");
 		printf(GREEN"Trip Number   : "RESET"AE%d\n", passenger.tripNumber);
 		
 		getTime(trip.tripNumber, time);
@@ -336,7 +336,7 @@ void passengerRoutine(Date date, Trip *trips, int nTrips)
 	int page = 0;
 	bool done = false;
 	system("clear||cls");
-	
+
 	// each step of the passenger add process is its own function that validates and returns the inputted info.
 	do {
 		switch (page) {

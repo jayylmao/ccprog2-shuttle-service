@@ -45,7 +45,7 @@ void getDropOffName(int dropOffPt, char *dropOffString)
 		strcpy(dropOffString, "Mamplasan Toll Exit");
 		break;
 	case 2:
-		strcpy(dropOffString, "San Jose Village");
+		strcpy(dropOffString, "Phase 5, San Jose Village");
 		break;
 	case 3:
 	case 5:
