@@ -69,6 +69,9 @@ void getDropOffName(int dropOffPt, char *dropOffString)
 	case 13:
 		strcpy(dropOffString, "Gate 1: South Gate (LS Building Entrance)");
 		break;
+	case 10:
+		strcpy(dropOffString, "College of St. Benilde (CSB) Along Taft");
+		break;
 	}
 }
 
@@ -175,17 +178,6 @@ void getRouteName(int route, int embarkPt, char *dest)
 #include "personnel.h"
 
 #define NONE '\0'
-#define PASSENGER '1'
-#define PERSONNEL '2'
-#define EXIT '0'
-
-#define VIEW_PASSENGERS_COUNT '1'
-#define VIEW_PASSENGERS_AT_DROP '2'
-#define VIEW_PASSENGER_INFO '3'
-#define LOAD_PASSENGER_INFO '4'
-#define SEARCH '5'
-#define LOAD_FILE '6'
-#define PERSONNEL_EXIT '0'
 
 /*
  *	personnelMenu allows personnel to access the functions available to them.
@@ -213,13 +205,16 @@ void personnelMenu(Trip trips[], Date date)
 		printf(YELLOW"[3.] View passenger information \n"RESET);
 		printf("Input a trip number to view all passengers on that trip.\n\n");
 
-		printf(YELLOW"[4.] Load passenger information \n"RESET);
-		printf("Select a file to add data into the program.\n\n");
+		printf(YELLOW"[4.] Overwrite data from file \n"RESET);
+		printf("Select a file to load data from, overwriting current data.\n\n");
 
 		printf(YELLOW"[5.] Search passenger \n"RESET);
 		printf("Search for passengers by their last name.\n\n");
 
-		printf(YELLOW"[6.] View file \n"RESET);
+		printf(YELLOW"[6.] Add passenger/s from file \n"RESET);
+		printf("Select a file to add passengers into the program.\n\n");
+
+		printf(YELLOW"[7.] View recent file \n"RESET);
 		printf("Select a file to view all the trips from that day.\n\n");
 		
 		printf(BLUE"Choose an option: ");
@@ -229,31 +224,34 @@ void personnelMenu(Trip trips[], Date date)
 
 		// the functions below are found in personnel.h
 		switch (userChoice) {
-		case PERSONNEL_EXIT:
+		case '0':
 			break;
-		case VIEW_PASSENGERS_COUNT:
+		case '1':
 			viewPassCount(trips, TRIP_COUNT);
 			break;
-		case VIEW_PASSENGERS_AT_DROP:
+		case '2':
 			viewPassAtDrop(trips, TRIP_COUNT);
 			break;
-		case VIEW_PASSENGER_INFO:
+		case '3':
 			viewPassInfo(trips, TRIP_COUNT);
 			break;
-		case LOAD_PASSENGER_INFO:
+		case '4':
 			loadPassInfo(trips, TRIP_COUNT);
 			break;
-		case SEARCH:
+		case '5':
 			searchPass(trips, TRIP_COUNT);
 			break;
-		case LOAD_FILE:
+		case '6':
+			addPassInfo(trips, TRIP_COUNT);
+			break;
+		case '7':
 			viewRecentFile();
 			break;
 		default:
-			printf(YELLOW"[*]: Please input a number from 0 - 6.\n"RESET);
+			printf(YELLOW"[*]: Please input a number from 0 - 7.\n"RESET);
 			break;
 		}
-	} while (userChoice != PERSONNEL_EXIT);
+	} while (userChoice != '0');
 }
 
 /*
@@ -272,7 +270,7 @@ void mainMenu()
 	initializeBuses(trips, TRIP_COUNT);
 
 	Date dateStruct;
-	char dateInput[3], monthInput[3], yearInput[5];
+	char dateInput[MAX], monthInput[MAX], yearInput[MAX];
 
 	system("clear||cls");
 
@@ -314,19 +312,19 @@ void mainMenu()
 		printf(RESET);
 
 		switch (userChoice) {
-		case EXIT:
+		case '0':
 			break;
-		case PASSENGER:
+		case '1':
 			passengerRoutine(dateStruct, trips, TRIP_COUNT);
 			break;
-		case PERSONNEL:
+		case '2':
 			personnelMenu(trips, dateStruct);
 			break;
 		default:
 			printf(YELLOW"[*] Please input a number from 0 - 2.\n"RESET);
 			break;
 		}
-	} while (userChoice != EXIT);
+	} while (userChoice != '0');
 
 	// only write trip info when the program is exited.
 	writeFile(trips, TRIP_COUNT, dateStruct);

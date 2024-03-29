@@ -69,9 +69,13 @@ void writeFile(Trip *trips, int nTrips, Date date)
 bool readTrips(Trip trips[], Date date)
 {
 	FILE *fp;
+	int dropOff, i;
 	
 	// number of passengers
 	int passNum = 0;
+
+	// total num of passengers
+	int totalPass = 0;
 
 	// trip index to save current data to.
 	int tripNum = 0;
@@ -100,12 +104,25 @@ bool readTrips(Trip trips[], Date date)
 		//check if name contains the bus number
 		if (atoi(firstName) >= 101 && atoi(firstName) <= 161)
 		{
+			// Finalize Previous Trip Values
+			trips[tripNum].passengerCount = passNum;
+			printf(YELLOW"Passengers in AE%d: "RESET"%d\n\n", trips[tripNum].tripNumber, passNum);
+
+			// Reset Passenger Index
+			passNum = 0;
+			
 			// scan the index that has trip number
-			tripNum = getTripIndex(atoi(firstName));
+
+			for (i = 0; i < TRIP_COUNT; i++)
+			{
+				if (trips[i].tripNumber == atoi(firstName))
+				{
+					tripNum = i;
+				}
+			}
 
 			// use this to scan through struct
 			printf(YELLOW"Trip Number: "RESET"AE%d\n", trips[tripNum].tripNumber);
-			printf(YELLOW"Passengers: "RESET"%d\n\n", passNum);
 
 			//get newline
 			fgets(buffer, MAX, fp);
@@ -124,14 +141,16 @@ bool readTrips(Trip trips[], Date date)
 						fscanf(fp, "%s", buffer);
 						
 						strcpy(trips[tripNum].passengers[passNum].id, buffer);
-						printf(YELLOW"ID: "RESET"%s\n", buffer);
+						// printf(YELLOW"ID: "RESET"%s\n", buffer);
+						printf(YELLOW"ID: "RESET"%s\n", trips[tripNum].passengers[passNum].id);
 						break;
 					case 3:
 						// get Priority buffer
 						fscanf(fp, "%s", buffer);
 					
 						trips[tripNum].passengers[passNum].priorityNumber = atoi(buffer);
-						printf(YELLOW"Priority: "RESET"%d\n\n", atoi(buffer));
+						// printf(YELLOW"Priority: "RESET"%d\n", atoi(buffer));
+						printf(YELLOW"Priority: "RESET"%d\n", trips[tripNum].passengers[passNum].priorityNumber);
 
 						break;
 					case 4:
@@ -139,7 +158,16 @@ bool readTrips(Trip trips[], Date date)
 						// make a function that can return the int value of dropoffPt
 						
 						fgets(buffer, MAX, fp);
+
+						dropOff = getDropOff(trips[tripNum].route, trips[tripNum].embarkPt, buffer);
+
+						trips[tripNum].passengers[passNum].dropOffPt = dropOff;
+
+						// printf(YELLOW"Drop-Off: "RESET"[%d.] %s\n\n", dropOff, buffer);
+						printf(YELLOW"Drop-Off: "RESET"[%d.] %s\n\n", trips[tripNum].passengers[passNum].dropOffPt, buffer);
+
 						passNum++;
+						totalPass++;
 						break;
 					default:
 						break;
@@ -153,6 +181,8 @@ bool readTrips(Trip trips[], Date date)
 			}
 		}
 	}
+
+	printf(YELLOW"Total passengers: "RESET"%d", totalPass);
 
 	fclose(fp);
 	return true;

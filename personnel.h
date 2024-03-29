@@ -297,9 +297,89 @@ void viewRecentFile()
 }
 
 /*
+ *	addPassInfo lets you add passengers from a file instead of inputting them manually.
+ *	Note that this file follows a different format from the program output.
+ *	Precondition: File is formatted properly.
+ *	@param trips[] List of trips to add passengers to.
+ *	@param nTrips Number of trips in list.
+ */
+void addPassInfo(Trip trips[], int nTrips)
+{
+	FILE *fp;
+	char filename[MAX];
+	Passenger passengers[16];
+	int passNum = 0;
+	int i;
+
+	int line;
+	char buffer[MAX];
+	char buffer2[MAX];
+
+	printHeader(YELLOW"Add passenger from file"RESET, 80);
+
+	do {
+		printf(BLUE"Type the name of the file to add passengers from, or 0 to return: "RESET);
+		scanf("%s", filename);
+
+		system("clear||cls");
+		printHeader(YELLOW"Add passenger from file"RESET, 80);
+
+		fp = fopen(filename, "r");
+
+		if (fp == NULL) {
+			printf(YELLOW"[*]: Could not find file %s.\n"RESET, filename);
+		}
+	} while (fp == NULL && strcmp(filename, "0") != 0);
+
+	if (strcmp(filename, "0") == 0) {
+		system("clear||cls");
+		return;
+	}
+
+	line = -1;
+
+	while (!feof(fp) && passNum < 16) {
+		if (line % 5 == 1) {
+			fscanf(fp, "%s %s", buffer, buffer2);
+		} else {
+			fscanf(fp, "%s", buffer);
+		}
+
+		line++;
+
+		switch (line % 5) {
+		case 0:
+			passengers[passNum].tripNumber = atoi(buffer);
+			break;
+		case 1:
+			passengers[passNum].priorityNumber = atoi(buffer);
+			break;
+		case 2:
+			strcpy(passengers[passNum].name.firstName, buffer);
+			strcpy(passengers[passNum].name.lastName, buffer2);
+			break;
+		case 3:
+			strcpy(passengers[passNum].id, buffer);
+			break;
+		case 4:
+			passengers[passNum].dropOffPt = atoi(buffer);
+			passNum++;
+			break;
+		default:
+			break;
+		}
+	}
+
+	for (i = 0; i < passNum; i++) {
+		addPassenger(passengers[i], trips, getTripIndex(passengers[i].tripNumber));
+	}
+
+	system("clear||cls");
+}
+
+/*
  *	loadPassInfo allows the user to load passengers into memory from a file, overwriting current data. 
  *	Solution by: Tyrrelle Mendoza
- *	TODO: read successful but loading into memory fails.
  *	@param trips[] List of trips in memory.
  *	@param nTrips Number of trips in array.
  *	@return None.
@@ -308,27 +388,32 @@ void loadPassInfo(Trip trips[], int nTrips)
 {
 	Trip newTrips[nTrips];
 	Date dateStruct;
+	char date[MAX], month[MAX], year[MAX];
 	int i, success;
 
 	initializeBuses(trips, TRIP_COUNT);
 	initializeBuses(newTrips, TRIP_COUNT);
 
-	printf("Enter a date to view (DD MM YYYY): ");
-	scanf("%d %d %d", &dateStruct.date, &dateStruct.month, &dateStruct.year);
-	
-	success = readTrips(newTrips, dateStruct);
+	printHeader(YELLOW"Load passengers from file"RESET, 80);
+	do {
+		printf(BLUE"Enter a date to view (DD MM YYYY): "RESET);
+		scanf("%s %s %s", date, month, year);
 
-	if (success)
-	{
-		printf("Successfully Loaded New Trip Data!\n");
+		dateStruct.date = atoi(date);
+		dateStruct.month = atoi(month);
+		dateStruct.year = atoi(year);
+		
+		success = readTrips(newTrips, dateStruct);
 
-		for (i = 0; i < nTrips; i++)
-		{
-			trips[i] = newTrips[i];
+		system("clear||cls");
+		printHeader(YELLOW"Load passengers from file"RESET, 80);
+
+		if (success) {
+			for (i = 0; i < nTrips; i++) {
+				trips[i] = newTrips[i];
+			}
+		} else {
+			printf(YELLOW"[*]: Could not find file %s-%s-%s.\n"RESET, date, month, year);
 		}
-
-	} else {
-		printf("Error Loading New Trip Data...\n");
-	}
-	
+	} while (!success);
 }

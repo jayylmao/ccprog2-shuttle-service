@@ -13,7 +13,7 @@ void displayTrip(int tripNumber, Trip trips[])
 
 	Trip trip = trips[busIndex];
 
-	if (trip.passengerCount <= 13) {	// standard seating
+	if (trip.passengerCount < 13) {	// standard seating
 		printf(".____.____.____.\n");
 
 		for (i = 0; i < 13; i++) {
@@ -37,7 +37,9 @@ void displayTrip(int tripNumber, Trip trips[])
 		printf(".____.____.____.____.\n");
 
 		for (i = 0; i < 16; i++) {
-			if (strcmp(trip.passengers[i].id, "-1") == 0 && (i + 1) == 16) { // last row has a different format
+			if (i == trip.passengerCount) { // print assigned seat number in green.
+				printf("| "GREEN"%02d "RESET, i + 1);
+			} else if (strcmp(trip.passengers[i].id, "-1") == 0 && (i + 1) == 16) { // last row has a different format
 				printf("| %02d      | Driver  ", i + 1);
 			} else if (strcmp(trip.passengers[i].id, "-1") == 0) { // print seat number if not occupied
 				printf("| %02d ", i + 1);

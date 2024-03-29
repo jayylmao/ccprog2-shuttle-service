@@ -230,16 +230,16 @@ void addPassenger(Passenger passenger, Trip *trips, int n)
 	int passengerCount, lowerPriorityPassenger;
 	passengerCount = trips[n].passengerCount;
 	
-	if (passengerCount == MAX_PASSENGERS) {
+	if (passengerCount >= MAX_PASSENGERS) {
 		lowerPriorityPassenger = searchForLowerPriority(passenger.priorityNumber, trips[n]);
 
-		if (lowerPriorityPassenger == -1 && n < TRIP_COUNT - 1) {
+		if (lowerPriorityPassenger == -1 && trips[n].embarkPt == trips[n + 1].embarkPt) {
 			printf(YELLOW"[*]: You have been moved to AE%d.\n"RESET, getTripNumber(n + 1));
 			addPassenger(passenger, trips, n + 1); // if no lower priority found, try next bus.
-		} else if (n < TRIP_COUNT - 1) {
+		} else if (trips[n].embarkPt == trips[n + 1].embarkPt) {
 			printf(YELLOW"[*]: A person of lower priority has been moved to AE%d to make space for you.\n"RESET, getTripNumber(n + 1));
 			addPassenger(trips[n].passengers[lowerPriorityPassenger], trips, n + 1); // otherwise, move lower priority passenger to next bus.
-			trips[n].passengers[passengerCount] = passenger; // replace old slot with new passenger.
+			trips[n].passengers[lowerPriorityPassenger] = passenger; // replace old slot with new passenger.
 		} else {
 			printf(YELLOW"[*]: The system is completely unable to accept any more passengers.\n"RESET);
 		}
