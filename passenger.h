@@ -1,6 +1,6 @@
 /*
- *	Solution by: Jay Carlos
  *	displayTrip visualizes the bus the user has selected on screen.
+ *	Solution by: Jay Carlos
  *	Precondition: A valid trip number is provided.
  *	@param tripNumber Integer corresponding to trip number.
  *	@trips[] Array of trips to get trip information from.
@@ -32,6 +32,7 @@ void displayTrip(int tripNumber, Trip trips[])
 		}
 
 		printf("| Driver  |\n");
+		printf(".____.____.____.\n");
 	} else {	// high-volume seating
 		printf(".____.____.____.____.\n");
 
@@ -53,27 +54,25 @@ void displayTrip(int tripNumber, Trip trips[])
 				printf(".____.____.____.____.\n");
 			}
 		}
-	}
 
-	printf(".____.____.____.____.\n");
+		printf(".____.____.____.____.\n");
+	}
 }
 
 /*
- *	Solution by: Jay Carlos
  *	inputTripNumber asks the user to input a trip number.
+ *	Solution by: Jay Carlos
  *	Precondition: Called from passengerRoutine().
  *	@return tripNumber Validated trip number entered by user.
  */
 int inputTripNumber()
 {
-	char input[4];
-	int tripNumber, tripIndex = -1;
+	char input[MAX];
+	int tripNumber, tripIndex;
 
 	do {
-		if (tripIndex == -1) {
-			printf("======[ "GREEN"Add passenger - Trip Number"RESET " ]===========================================\n");
-			printHeader("[ "GREEN"1"RESET" ]---[ 2 ]---[ 3 ]---[ 4 ]---[ 5 ]---[ 6 ]", 80);
-		}
+		printf("======[ "GREEN"Add passenger - Trip Number"RESET " ]===========================================\n");
+		printHeader("[ "GREEN"1"RESET" ]---[ 2 ]---[ 3 ]---[ 4 ]---[ 5 ]---[ 6 ]", 80);
 		
 		printf(BLUE"Enter trip number: " RESET "AE");
 		scanf("%s", input);
@@ -91,31 +90,29 @@ int inputTripNumber()
 }
 
 /*
- *	Solution by: Jay Carlos
  *	inputPriorityNumber asks the user to input a priority number.
+ *	Solution by: Jay Carlos
  *	Precondition: Called from passengerRoutine().
  *	@return priorityNumber Validated priority number entered by user.
  */
 int inputPriorityNumber()
 {
-	char input[1];
+	char input[MAX];
 	int priorityNumber;
 	priorityNumber = 0;
 
 	do {
-		if (priorityNumber < 1 || priorityNumber > 6) {
-			printf("======[ "GREEN"Add passenger - Priority Number"RESET " ]=======================================\n");
-			printHeader("[ 1 ]---[ "GREEN"2"RESET" ]---[ 3 ]---[ 4 ]---[ 5 ]---[ 6 ]", 80);
+		printf("======[ "GREEN"Add passenger - Priority Number"RESET " ]=======================================\n");
+		printHeader("[ 1 ]---[ "GREEN"2"RESET" ]---[ 3 ]---[ 4 ]---[ 5 ]---[ 6 ]", 80);
 
-			printf(YELLOW"Priority numbers:\n");
-			printf("[1.] "RESET"Faculty & ASF with Inter-campus assignments\n");
-			printf(YELLOW"[2.] "RESET"Students with Inter-campus enrolled subjects/thesis\n");
-			printf(YELLOW"[3.] "RESET"Researchers\n");
-			printf(YELLOW"[4.] "RESET"School Administrators\n");
-			printf(YELLOW"[5.] "RESET"University Fellows\n");
-			printf(YELLOW"[6.] "RESET"Employees and Students with official business\n");
-			printf(RED"[!]: Falsifying priority is subject to severe disciplinary action.\n");
-		}
+		printf(YELLOW"Priority numbers:\n");
+		printf("[1.] "RESET"Faculty & ASF with Inter-campus assignments\n");
+		printf(YELLOW"[2.] "RESET"Students with Inter-campus enrolled subjects/thesis\n");
+		printf(YELLOW"[3.] "RESET"Researchers\n");
+		printf(YELLOW"[4.] "RESET"School Administrators\n");
+		printf(YELLOW"[5.] "RESET"University Fellows\n");
+		printf(YELLOW"[6.] "RESET"Employees and Students with official business\n");
+		printf(RED"[!]: Falsifying priority is subject to severe disciplinary action.\n");
 
 		printf(BLUE"Enter priority number: " RESET);
 		scanf("%s", input);
@@ -132,8 +129,8 @@ int inputPriorityNumber()
 }
 
 /*
- *	Solution by: Jay Carlos
  *	inputName asks the user to input a first and last name.
+ *	Solution by: Jay Carlos
  *	Precondition: Called from passengerRoutine().
  *	@return name Struct containing first and last name.
  */
@@ -144,10 +141,8 @@ Name inputName()
 	strcpy(name.lastName, "");
 
 	do {
-		if (strcmp(name.firstName, "") == 0 || strcmp(name.lastName, "") == 0) {
-			printf("======[ "GREEN"Add passenger - Name"RESET " ]==================================================\n");
-			printHeader("[ 1 ]---[ 2 ]---[ "GREEN"3"RESET" ]---[ 4 ]---[ 5 ]---[ 6 ]", 80);
-		}
+		printf("======[ "GREEN"Add passenger - Name"RESET " ]==================================================\n");
+		printHeader("[ 1 ]---[ 2 ]---[ "GREEN"3"RESET" ]---[ 4 ]---[ 5 ]---[ 6 ]", 80);
 
 		printf(BLUE"Enter name (First name last name): " RESET);
 		scanf("%s %s", name.firstName, name.lastName);
@@ -162,20 +157,18 @@ Name inputName()
 }
 
 /*
- *	Solution by: Jay Carlos
  *	inputId asks the user to input an ID.
+ *	Solution by: Jay Carlos
  *	Precondition: Called from passengerRoutine() and valid destination string provided.
  *	@return None.
  */
 void inputId(char *dest)
 {
-	char id[9];
+	char id[MAX];
 
 	do {
-		if (strlen(id) != 8 || atoi(id) == 0) {
-			printf("======[ "GREEN"Add passenger - ID"RESET " ]====================================================\n");
-			printHeader("[ 1 ]---[ 2 ]---[ 3 ]---[ "GREEN"4"RESET" ]---[ 5 ]---[ 6 ]", 80);
-		}
+		printf("======[ "GREEN"Add passenger - ID"RESET " ]====================================================\n");
+		printHeader("[ 1 ]---[ 2 ]---[ 3 ]---[ "GREEN"4"RESET" ]---[ 5 ]---[ 6 ]", 80);
 		
 		printf(BLUE"Enter ID: " RESET);
 		scanf("%s", id);
@@ -190,64 +183,61 @@ void inputId(char *dest)
 }
 
 /*
- *	Solution by: Jay Carlos
  *	inputDropOff displays a list of exits and drop-off points for the user to select from.
+ *	Solution by: Jay Carlos
  *	Precondition: A valid trip number must be given.
  *	@param tripNumber Integer corresponding to trip number.
  *	@return Integer corresponding to the drop-off point.
  */
 int inputDropOff(int embarkPoint, int route)
 {
-	char input[1];
+	char input[MAX];
 	// dropOff is where the user's input is stored.
 	// menuLimit is an upper bound for the menu to determine input validity.
-	int dropOff = 0;
-	int menuLimit, offset = 0;
+	int dropOff, menuLimit, offset;
 
 	do {
-		if (dropOff < 1 || dropOff > menuLimit) {
-			printf("======[ "GREEN"Add passenger - Route"RESET " ]=================================================\n");
-			printHeader("[ 1 ]---[ 2 ]---[ 3 ]---[ 4 ]---[ "GREEN"5"RESET" ]---[ 6 ]", 80);
+		printf("======[ "GREEN"Add passenger - Route"RESET " ]=================================================\n");
+		printHeader("[ 1 ]---[ 2 ]---[ 3 ]---[ 4 ]---[ "GREEN"5"RESET" ]---[ 6 ]", 80);
 
-			// shows a different set of available routes depending on the user embark point and set trip route.
-			printf(YELLOW"Route: "RESET);
-			switch (embarkPoint) {
-			case 0:
-				if (route == 0) {
-					printf("Via Mamplasan exit\n");
-					printf(YELLOW"[1.] "RESET"Mamplasan Toll Exit\n");
-					printf(YELLOW"[2.] "RESET"Phase 5, San Jose Village\n");
-					printf(YELLOW"[3.] "RESET"Milagros Del Rosario Building - East Canopy\n");
-					menuLimit = 3;
-				} else {
-					printf("Via ETON exit\n");
-					printf(YELLOW"[1.] "RESET"Laguna Blvd. Guard House\n");
-					printf(YELLOW"[2.] "RESET"Milagros Del Roasrio Building - East Canopy\n");
-					menuLimit = 2;
-					offset = 3;
-				}
-				break;
-			case 1:
-				menuLimit = 4;
-
-				if (route == 0) {
-					printf("Via Estrada\n");
-					printf(YELLOW"[1.] "RESET"Petron Gasoline Station along Gil Puyat Avenue\n");
-					printf(YELLOW"[2.] "RESET"Gate 4: Gokongwei Gate\n");
-					printf(YELLOW"[3.] "RESET"Gate 2: North Gate (HSSH)\n");
-					printf(YELLOW"[4.] "RESET"Gate 1: South Gate (LS Building Entrance)\n");
-					offset = 5;
-				} else {
-					printf("Via Buendia/LRT");
-					printf(YELLOW"[1.] "RESET"College of St. Benilde (CSB) Along Taft\n");
-					printf(YELLOW"[2.] "RESET"Gate 4: Gokongwei Gate\n");
-					printf(YELLOW"[3.] "RESET"Gate 2: North Gate (HSSH)\n");
-					printf(YELLOW"[4.] "RESET"Gate 1: South Gate (LS Building Entrance)\n");
-					offset = 9;
-				}
-			default:
-				break;
+		// shows a different set of available routes depending on the user embark point and set trip route.
+		printf(YELLOW"Route: "RESET);
+		switch (embarkPoint) {
+		case 0:
+			if (route == 0) {
+				printf("Via Mamplasan exit\n");
+				printf(YELLOW"[1.] "RESET"Mamplasan Toll Exit\n");
+				printf(YELLOW"[2.] "RESET"Phase 5, San Jose Village\n");
+				printf(YELLOW"[3.] "RESET"Milagros Del Rosario Building - East Canopy\n");
+				menuLimit = 3;
+			} else {
+				printf("Via ETON exit\n");
+				printf(YELLOW"[1.] "RESET"Laguna Blvd. Guard House\n");
+				printf(YELLOW"[2.] "RESET"Milagros Del Roasrio Building - East Canopy\n");
+				menuLimit = 2;
+				offset = 3;
 			}
+			break;
+		case 1:
+			menuLimit = 4;
+
+			if (route == 0) {
+				printf("Via Estrada\n");
+				printf(YELLOW"[1.] "RESET"Petron Gasoline Station along Gil Puyat Avenue\n");
+				printf(YELLOW"[2.] "RESET"Gate 4: Gokongwei Gate\n");
+				printf(YELLOW"[3.] "RESET"Gate 2: North Gate (HSSH)\n");
+				printf(YELLOW"[4.] "RESET"Gate 1: South Gate (LS Building Entrance)\n");
+				offset = 5;
+			} else {
+				printf("Via Buendia/LRT\n");
+				printf(YELLOW"[1.] "RESET"College of St. Benilde (CSB) Along Taft\n");
+				printf(YELLOW"[2.] "RESET"Gate 4: Gokongwei Gate\n");
+				printf(YELLOW"[3.] "RESET"Gate 2: North Gate (HSSH)\n");
+				printf(YELLOW"[4.] "RESET"Gate 1: South Gate (LS Building Entrance)\n");
+				offset = 9;
+			}
+		default:
+			break;
 		}
 		
 		printf(BLUE"Choose a drop-off point: "RESET);
@@ -266,8 +256,8 @@ int inputDropOff(int embarkPoint, int route)
 }
 
 /*
- *	Solution by: Jay Carlos
  *	reviewDetails lets the user review the information they entered, and redo if needed.
+ *	Solution by: Jay Carlos
  *	@param passenger The passenger whose information was just entered and is being reviewed.
  *	@param embarkPt Integer corresponding to embark point of passenger's trip.
  *	@param route Route of trip.
@@ -276,9 +266,11 @@ int inputDropOff(int embarkPoint, int route)
  */
 bool reviewDetails(Passenger passenger, int embarkPt, int route, Trip trips[])
 {
-	char input[1];
+	char input[MAX];
 	char dropOffName[MAX];
 	char routeName[MAX];
+	char priorityName[MAX];
+	char time[6];
 
 	// 0 is don't exit, 1 is done, 2 is go back to the start.
 	int exitStatus = 0;
@@ -286,30 +278,38 @@ bool reviewDetails(Passenger passenger, int embarkPt, int route, Trip trips[])
 	Trip trip;
 	trip = trips[getTripIndex(passenger.tripNumber)];
 	
-	printf("======[ "GREEN"Add passenger - Review Details"RESET " ]========================================\n");
-	printHeader("[ 1 ]---[ 2 ]---[ 3 ]---[ 4 ]---[ 5 ]---[ "GREEN"6"RESET" ]", 80);
-
-	displayTrip(passenger.tripNumber, trips);
-	printf("AE%d", passenger.tripNumber);
-
-	printf("\n\nPersonal Information\n");
-	printf(GREEN"Name          : "RESET"%s %s\n", passenger.name.firstName, passenger.name.lastName);
-	printf(GREEN"ID            : "RESET"%s\n", passenger.id);
-	printf(GREEN"Priority Group: "RESET"%d\n", passenger.priorityNumber);
-	
-	printf("\nTrip Information\n");
-	setRoute(trip.route, trip.embarkPt, routeName);
-	printf(GREEN"Route         : "RESET"%s\n", routeName);
-
-	setDropOffPt(passenger.dropOffPt, dropOffName);
-	printf(GREEN"Drop-off Point: "RESET"%s\n\n", dropOffName);
-	
 	do {
+		printf("======[ "GREEN"Add passenger - Review Details"RESET " ]========================================\n");
+		printHeader("[ 1 ]---[ 2 ]---[ 3 ]---[ 4 ]---[ 5 ]---[ "GREEN"6"RESET" ]", 80);
+
+		displayTrip(passenger.tripNumber, trips);
+
+		printf("\n\nPersonal Information\n");
+		printf(GREEN"Name          : "RESET"%s %s\n", passenger.name.firstName, passenger.name.lastName);
+		printf(GREEN"ID            : "RESET"%s\n", passenger.id);
+
+		getPriorityGroupName(passenger.priorityNumber, priorityName);
+		printf(GREEN"Priority Group: "RESET"%s (%d)\n", priorityName, passenger.priorityNumber);
+		
+		printf("\nTrip Information\n");
+		printf(GREEN"Trip Number   : "RESET"AE%d\n", passenger.tripNumber);
+		
+		getTime(trip.tripNumber, time);
+		printf(GREEN"Time          : "RESET"%s\n", time);
+		getRouteName(trip.route, trip.embarkPt, routeName);
+		printf(GREEN"Route         : "RESET"%s\n", routeName);
+
+		getDropOffName(passenger.dropOffPt, dropOffName);
+		printf(GREEN"Drop-off Point: "RESET"%s\n\n", dropOffName);
+
 		printf(BLUE"Review information. Enter 1 to exit and 2 to restart: " RESET);
 		scanf("%s", input);
 
 		if (atoi(input) == 1 || atoi(input) == 2) {
 			exitStatus = atoi(input);
+		} else {
+			system("clear||cls");
+			printf(YELLOW"[*]: Enter either 1 to exit or 2 to restart.\n"RESET);
 		}
 	} while (!exitStatus);
 
@@ -321,8 +321,8 @@ bool reviewDetails(Passenger passenger, int embarkPt, int route, Trip trips[])
 }
 
 /*
- *	Solution by: Jay Carlos
  *	passengerRoutine allows a passenger to select a trip to embark on.
+ *	Solution by: Jay Carlos
  *	Precondition: Valid date is entered.
  *	@param date Date to pass to the writePassenger function.
  *	@param *trips List of trips to add user to.
@@ -335,7 +335,8 @@ void passengerRoutine(Date date, Trip *trips, int nTrips)
 	Trip trip;
 	int page = 0;
 	bool done = false;
-
+	system("clear||cls");
+	
 	// each step of the passenger add process is its own function that validates and returns the inputted info.
 	do {
 		switch (page) {

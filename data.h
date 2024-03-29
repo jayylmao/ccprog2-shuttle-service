@@ -1,106 +1,60 @@
 /*
- *	Solution by: Jay Carlos
- *  setDropOffPt returns the name of a drop-off point given its integer representation in the program.
- *  Precondition: Valid drop-off point integer given.
- *  @param dropOffPt Integer representation of drop-off point in program
- *  @param dropOffString Character array to save name of drop-off point to.
- *  @return None.
- */
-void setDropOffPt(int dropOffPt, char *dropOffString)
-{
-	switch (dropOffPt) {
-	case 1:
-		strcpy(dropOffString, "Mamplasan Toll Exit");
-		break;
-	case 2:
-		strcpy(dropOffString, "San Jose Village");
-		break;
-	case 3:
-	case 5:
-		strcpy(dropOffString, "Milagros Del Rosario (MRR) Building - East Canopy");
-		break;
-	case 4:
-		strcpy(dropOffString, "Laguna Blvd. Guard House");
-		break;
-	case 6:
-		strcpy(dropOffString, "Petron Gasoline Station along Gil Puyat Avenue");
-		break;
-	case 7:
-	case 11:
-		strcpy(dropOffString, "Gate 4: Gokongwei Gate");
-		break;
-	case 8:
-	case 12:
-		strcpy(dropOffString, "Gate 2: North Gate (HSSH)");
-		break;
-	case 9:
-	case 13:
-		strcpy(dropOffString, "Gate 1: South Gate (LS Building Entrance)");
-		break;
-	}
-}
-
-void setRoute(int route, int embarkPt, char *dest)
-{
-	switch (embarkPt) {
-	case 0:
-		if (route == 0) {
-			strcpy(dest, "Via Mamplasan exit");
-		} else {
-			strcpy(dest, "Via ETON exit");
-		}
-		break;
-	case 1:
-		if (route == 0) {
-			strcpy(dest, "Via Estrada");
-		} else {
-			strcpy(dest, "Via Buendia/LRT");
-		}
-		break;
-	default:
-		break;
-	}
-}
-
-/*
- *	Solution by: Jay Carlos
  *	getTripNumber returns the trip number given the trip index.
+ *	Solution by: Jay Carlos
  *	Precondition: tripIndex is a valid integer.
  *	@param tripIndex index of trip in array.
  *	@return Trip number.
  */
 int getTripNumber(int tripIndex)
 {
-	int tripNumber = 0;
-	if (tripIndex >= 0 && tripIndex <= 8) {
-		tripNumber += 101 + tripIndex;
-	} else if (tripIndex >= 9 && tripIndex <= 19) {
-		tripNumber += 141 + tripIndex;
-	} else {
-		tripNumber = -1;
+	FILE *fp;
+	int tripNumber = -1;
+	int i = -1;
+	int hour, minute;
+
+	fp = fopen("./config/tripSched.txt", "r");
+
+	if (fp == NULL) {
+		printf(RED"[!]: Trip schedule file (./config/tripSched.txt) could not be found.\n"RESET);
+		return tripNumber;
+	}
+
+	while (!feof(fp) && i < tripIndex) {
+		fscanf(fp, "%d %d %d", &tripNumber, &hour, &minute);
+		i++;
 	}
 
 	return tripNumber;
 }
 
 /*
- *	Solution by: Jay Carlos
  *	getTripIndex returns the corresponding trip index given a trip number.
+ *	Solution by: Jay Carlos
  *	Precondition: Valid integer is provided.
  *	@param tripNumber trip number from schedule (101 - 109, 150 - 160).
  *	@return index of appropriate trip in array.
  */
 int getTripIndex(int tripNumber)
 {
-	int tripIndex = 0;
-	if (tripNumber >= 101 && tripNumber <= 109) {
-		tripIndex = tripNumber - 101;
-	} else if (tripNumber >= 150 && tripNumber <= 160) {
-		tripIndex = tripNumber - 141;
-	} else {
-		tripIndex = -1;
+	FILE *fp;
+	int fileTripNumber;
+	int hour, minute;
+
+	int tripIndex = -1;
+
+	fp = fopen("./config/tripSched.txt", "r");
+
+	if (fp == NULL) {
+		printf(RED"[!]: Trip schedule file (./config/tripSched.txt) could not be found.\n"RESET);
+		return tripIndex;
 	}
 
+	while (!feof(fp) && fileTripNumber != tripNumber) {
+		fscanf(fp, "%d %d %d", &fileTripNumber, &hour, &minute);
+		tripIndex++;
+	}
+
+	fclose(fp);
 	return tripIndex;
 }
 
@@ -108,12 +62,12 @@ int getTripIndex(int tripNumber)
  *	Solution by: Tyrrelle Mendoza
  *	getDropOff returns an integer corresponding to a certain string name.
  *	Precondition: Valid place name, route, and embarkation point given.
- *	@param place[] String name of drop-off point.
  *	@param route Integer corresponding to route of trip.
  *	@param embarkNum Embarkation point of trip.
+ *	@param *dest Character array to save drop-off point name to.
  *	@return Integer corresponding to a given string name.
  */
-int getDropOff(char place[], int route, int embarkNum)
+int getDropOff(int route, int embarkNum, char *dest)
 {
 	/*
 	 *	Mamplasan Toll Exit
@@ -135,33 +89,33 @@ int getDropOff(char place[], int route, int embarkNum)
 	 */
 
 	// remove newline
-	size_t len = strlen(place);
-    if (len > 0 && place[len - 1] == '\n') {
-        place[len - 1] = '\0';
+	size_t len = strlen(dest);
+    if (len > 0 && dest[len - 1] == '\n') {
+        dest[len - 1] = '\0';
     }
 
 	if (!embarkNum) {
 		if (!route) // 0
 		{
-			if (strcmp("Mamplasan Toll Exit", place) == 0) return 1;
-			else if (strcmp("Phase 5, San Jose Village", place) == 0) return 2;
-			else if (strcmp("Milagros Del Rosario Building - East Canopy", place) == 0) return 3;
+			if (strcmp("Mamplasan Toll Exit", dest) == 0) return 1;
+			else if (strcmp("Phase 5, San Jose Village", dest) == 0) return 2;
+			else if (strcmp("Milagros Del Rosario Building - East Canopy", dest) == 0) return 3;
 		} else { // 1
-			if (strcmp("Laguna Blvd. Guard House", place) == 0) return 4;
-			else if (strcmp("Milagros Del Roasrio Building - East Canopy", place) == 0) return 5;
+			if (strcmp("Laguna Blvd. Guard House", dest) == 0) return 4;
+			else if (strcmp("Milagros Del Roasrio Building - East Canopy", dest) == 0) return 5;
 		}
 	} else if (embarkNum) {
 		if (!route)
 		{
-			if (strcmp("Petron Gasoline Station along Gil Puyat Avenue", place) == 0) return 6;
-			else if (strcmp("Gate 4: Gokongwei Gate", place) == 0) return 7;
-			else if (strcmp("Gate 2: North Gate (HSSH)", place) == 0) return 8;
-			else if (strcmp("Gate 1: South Gate (LS Building Entrance)", place) == 0) return 9;
+			if (strcmp("Petron Gasoline Station along Gil Puyat Avenue", dest) == 0) return 6;
+			else if (strcmp("Gate 4: Gokongwei Gate", dest) == 0) return 7;
+			else if (strcmp("Gate 2: North Gate (HSSH)", dest) == 0) return 8;
+			else if (strcmp("Gate 1: South Gate (LS Building Entrance)", dest) == 0) return 9;
 		} else {
-			if (strcmp("College of St. Benilde (CSB) Along Taft", place) == 0) return 10;
-			else if (strcmp("Gate 4: Gokongwei Gate", place) == 0) return 11;
-			else if (strcmp("Gate 2: North Gate (HSSH)", place) == 0) return 12;
-			else if (strcmp("Gate 1: South Gate (LS Building Entrance)", place) == 0) return 13;
+			if (strcmp("College of St. Benilde (CSB) Along Taft", dest) == 0) return 10;
+			else if (strcmp("Gate 4: Gokongwei Gate", dest) == 0) return 11;
+			else if (strcmp("Gate 2: North Gate (HSSH)", dest) == 0) return 12;
+			else if (strcmp("Gate 1: South Gate (LS Building Entrance)", dest) == 0) return 13;
 		}
 	}
 
@@ -169,8 +123,8 @@ int getDropOff(char place[], int route, int embarkNum)
 }
 
 /*
- *	Solution by: Jay Carlos
  *	initializeBuses ensures that the passenger count for all trips is not garbage data upon program launch.
+ *	Solution by: Jay Carlos
  *	@param trips[] an array of trips to iterate through and initialize.
  *	@param nTrips number of trips in the array.
  *	@return None.
@@ -209,14 +163,14 @@ void initializeBuses(Trip trips[], int nTrips)
 }
 
 /*
+ *	getEmbarkationPointName converts the integer representation of the embark point to the string name.
  *	Solution by: Jay Carlos
- *	setEmbarkName converts the integer representation of the embark point to the string name.
  *	Precondition: Valid trip number provided and destination string has valid length.
  *	@param embarkPtInt Integer representation of embark point name in program.
  *	@param embarkName pointer to string to save embark point name to.
  *	@return None.
  */
-void setEmbarkName(int embarkPtInt, char embarkName[])
+void getEmbarkationPointName(int embarkPtInt, char embarkName[])
 {
 	switch (embarkPtInt) {
 	case 0:
@@ -232,8 +186,8 @@ void setEmbarkName(int embarkPtInt, char embarkName[])
 }	
 
 /*
- *	Solution by: Jay Carlos
  *	searchForLowerPriority searches for a passenger with a lower priority in a specified trip, given a specified priority level to check against.
+ *	Solution by: Jay Carlos
  *	Precondition: None.
  *	@param priority Priority number to check against.
  *	@param trip Trip to check in.
@@ -254,8 +208,8 @@ int searchForLowerPriority(int priority, Trip trip)
 }
 
 /*
- *	Solution by: Jay Carlos
  *	addPassenger adds a Passenger struct to the nth Trip struct in the array.
+ *	Solution by: Jay Carlos
  *	Precondition: Valid trip array and passenger provided.
  *	@param passenger a passenger object to add to a trip.
  *	@param *trip a pointer to an array of trips for the day.

@@ -18,7 +18,7 @@ typedef struct Name Name;
 struct Passenger {
 	// personally identifiable information.
 	Name name;
-	char id[8];
+	char id[9];
 	int priorityNumber;
 
 	// trip information

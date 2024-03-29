@@ -1,6 +1,6 @@
 /*
- *	Solution by: Tyrrelle Mendoza
  *  writeFile takes all the trips in the array and writes all passenger and trip info
+ *	Solution by: Tyrrelle Mendoza, modified by: Jay Carlos
  *  to a file specified by the date.
  *  @param *trips Pointer to array of trips whose info will be written to the file.
  *  @param nTrips Number of trips in the array.
@@ -36,7 +36,7 @@ void writeFile(Trip *trips, int nTrips, Date date)
 		
 		if (passengerCount > 0) {
 			fprintf(fp, "%d\n", trips[i].tripNumber);
-			setEmbarkName(trips[i].embarkPt, embarkPoint);
+			getEmbarkationPointName(trips[i].embarkPt, embarkPoint);
 			fprintf(fp, "%s\n", embarkPoint);
 		}
 
@@ -48,7 +48,7 @@ void writeFile(Trip *trips, int nTrips, Date date)
 			fprintf(fp, "%s\n", passenger.id);
 			fprintf(fp, "%d\n", passenger.priorityNumber);
 
-			setDropOffPt(passenger.dropOffPt, dropOffPoint);
+			getDropOffName(passenger.dropOffPt, dropOffPoint);
 			fprintf(fp, "%s\n", dropOffPoint);
 			
 			// add extra newline for all other passengers as per MP specs.
@@ -60,8 +60,8 @@ void writeFile(Trip *trips, int nTrips, Date date)
 }
 
 /*
- *	Solution by: Tyrrelle Mendoza
  *  readTrips reads all trips from a file of a given date for viewing.
+ *	Solution by: Tyrrelle Mendoza
  *  Precondition: Valid date format given.
  *  @param date Date to base file name from.
  *  @return Success indicator.
@@ -100,13 +100,12 @@ bool readTrips(Trip trips[], Date date)
 		//check if name contains the bus number
 		if (atoi(firstName) >= 101 && atoi(firstName) <= 161)
 		{
-			printf("Found Trip!\n");
-
 			// scan the index that has trip number
 			tripNum = getTripIndex(atoi(firstName));
 
 			// use this to scan through struct
-			printf("Trip Number: AE%d\nIndex: %d\n\n", trips[tripNum].tripNumber, tripNum);
+			printf(YELLOW"Trip Number: "RESET"AE%d\n", trips[tripNum].tripNumber);
+			printf(YELLOW"Passengers: "RESET"%d\n\n", passNum);
 
 			//get newline
 			fgets(buffer, MAX, fp);
@@ -118,21 +117,21 @@ bool readTrips(Trip trips[], Date date)
 					case 1:
 						strcpy(trips[tripNum].passengers[passNum].name.firstName, firstName);
 						strcpy(trips[tripNum].passengers[passNum].name.lastName, lastName);
-						printf("Name: %s %s\n", firstName, lastName);
+						printf(YELLOW"Name: "RESET"%s %s\n", firstName, lastName);
 						break;
 					case 2:
 						// get ID buffer
 						fscanf(fp, "%s", buffer);
 						
 						strcpy(trips[tripNum].passengers[passNum].id, buffer);
-						printf("ID: %s\n", buffer);
+						printf(YELLOW"ID: "RESET"%s\n", buffer);
 						break;
 					case 3:
 						// get Priority buffer
 						fscanf(fp, "%s", buffer);
 					
 						trips[tripNum].passengers[passNum].priorityNumber = atoi(buffer);
-						printf("Priority: %d\n\n", atoi(buffer));
+						printf(YELLOW"Priority: "RESET"%d\n\n", atoi(buffer));
 
 						break;
 					case 4:
@@ -155,15 +154,13 @@ bool readTrips(Trip trips[], Date date)
 		}
 	}
 
-	printf("Passengers: %d\n", passNum); // temp
-
 	fclose(fp);
 	return true;
 }
 
 /*
- *	Solution by: Tyrrelle Mendoza
  *	loadPassInfo allows the user to load passengers into memory from a file, overwriting current data. 
+ *	Solution by: Tyrrelle Mendoza
  *	TODO: read successful but loading into memory fails.
  *	@param trips[] List of trips in memory.
  *	@param nTrips Number of trips in array.
