@@ -41,6 +41,7 @@ int getTripIndex(int tripNumber)
 	int hour, minute;
 
 	int tripIndex = -1;
+	bool tripFound = false;
 
 	fp = fopen("./config/tripSched.txt", "r");
 
@@ -52,6 +53,14 @@ int getTripIndex(int tripNumber)
 	while (!feof(fp) && fileTripNumber != tripNumber) {
 		fscanf(fp, "%d %d %d", &fileTripNumber, &hour, &minute);
 		tripIndex++;
+
+		if (fileTripNumber == tripNumber) {
+			tripFound = true;
+		}
+	}
+
+	if (!tripFound) {
+		tripIndex = -1;
 	}
 
 	fclose(fp);

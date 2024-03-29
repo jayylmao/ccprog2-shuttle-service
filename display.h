@@ -198,11 +198,9 @@ void getRouteName(int route, int embarkPt, char *dest)
 void personnelMenu(Trip trips[], Date date)
 {
 	char userChoice;
-	system("clear||cls");
-	printHeader(YELLOW"Personnel Management Console"RESET, 80);
-
 	do
 	{
+		printHeader(YELLOW"Personnel Management Console"RESET, 80);
 		printf(YELLOW"[0.] Back \n"RESET);
 		printf("Go back to the main menu.\n\n");
 
@@ -221,14 +219,13 @@ void personnelMenu(Trip trips[], Date date)
 		printf(YELLOW"[5.] Search passenger \n"RESET);
 		printf("Search for passengers by their last name.\n\n");
 
-		printf(YELLOW"[6.] View recent file \n"RESET);
+		printf(YELLOW"[6.] View file \n"RESET);
 		printf("Select a file to view all the trips from that day.\n\n");
 		
 		printf(BLUE"Choose an option: ");
 		scanf(" %c", &userChoice);
 		printf(RESET);
 		system("clear||cls");
-		printHeader(YELLOW"Personnel Management Console"RESET, 80);
 
 		// the functions below are found in personnel.h
 		switch (userChoice) {
@@ -278,29 +275,29 @@ void mainMenu()
 	char dateInput[3], monthInput[3], yearInput[5];
 
 	system("clear||cls");
+
 	printHeader(YELLOW"System Initialization"RESET, 80);
 	
 	do {
 		printf(BLUE"Please enter the current date (DD MM YYYY): "RESET);
 		scanf("%s %s %s", dateInput, monthInput, yearInput);
 
-		system("clear||cls");
-		printHeader(YELLOW"System Initialization"RESET, 80);
-
 		dateStruct.date = atoi(dateInput);
 		dateStruct.month = atoi(monthInput);
 		dateStruct.year = atoi(yearInput);
 
 		if ((dateStruct.date < 1 || dateStruct.date > 31) || (dateStruct.month < 1 || dateStruct.month > 12) || dateStruct.year < 1) {
+			system("clear||cls");
+			printHeader(YELLOW"System Initialization"RESET, 80);
 			printf(YELLOW"[*]: Enter a valid date (DD MM YYYY)\n"RESET);
 		}
 	} while ((dateStruct.date < 1 || dateStruct.date > 31) || (dateStruct.month < 1 || dateStruct.month > 12) || dateStruct.year < 1);
 
 	printf(RESET);
 	system("clear||cls");
-	printHeader(GREEN"Arrows Express Trip System"RESET, 80);
 
 	do {
+		printHeader(GREEN"Arrows Express Trip System"RESET, 80);
 		printf(GREEN"[0.] Exit \n"RESET);
 		printf("Exit the program and save current trip data.\n\n");
 
@@ -312,9 +309,7 @@ void mainMenu()
 
 		printf(BLUE"Choose an option: ");
 		scanf(" %c", &userChoice);
-		printf(RESET);
 		system("clear||cls");
-		printHeader(GREEN"Arrows Express Trip System"RESET, 80);
 
 		printf(RESET);
 
@@ -332,8 +327,7 @@ void mainMenu()
 			break;
 		}
 	} while (userChoice != EXIT);
-	
-	system("clear||cls");
+
 	// only write trip info when the program is exited.
 	writeFile(trips, TRIP_COUNT, dateStruct);
 }

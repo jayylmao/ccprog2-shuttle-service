@@ -157,39 +157,3 @@ bool readTrips(Trip trips[], Date date)
 	fclose(fp);
 	return true;
 }
-
-/*
- *	loadPassInfo allows the user to load passengers into memory from a file, overwriting current data. 
- *	Solution by: Tyrrelle Mendoza
- *	TODO: read successful but loading into memory fails.
- *	@param trips[] List of trips in memory.
- *	@param nTrips Number of trips in array.
- *	@return None.
- */
-void loadPassInfo(Trip trips[], int nTrips)
-{
-	Trip newTrips[nTrips];
-	Date dateStruct;
-	int i, success;
-
-	initializeBuses(trips, TRIP_COUNT);
-
-	printf("Enter a date to view (DD MM YYYY): ");
-	scanf("%d %d %d", &dateStruct.date, &dateStruct.month, &dateStruct.year);
-	
-	success = readTrips(newTrips, dateStruct);
-
-	if (success)
-	{
-		printf("Successfully Loaded New Trip Data!\n");
-
-		for (i = 0; i < nTrips; i++)
-		{
-			trips[i] = newTrips[i];
-		}
-
-	} else {
-		printf("Error Loading New Trip Data...\n");
-	}
-	
-}
