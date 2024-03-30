@@ -177,8 +177,6 @@ void getRouteName(int route, int embarkPt, char *dest)
 #include "passenger.h"
 #include "personnel.h"
 
-#define NONE '\0'
-
 /*
  *	personnelMenu allows personnel to access the functions available to them.
  *	Solution by: Jay Carlos
@@ -270,6 +268,7 @@ void mainMenu()
 
 	printHeader(YELLOW"System Initialization"RESET, 80);
 	
+	// ask user for date.
 	do {
 		printf(BLUE"Please enter the current date (DD MM YYYY): "RESET);
 		scanf("%s %s %s", dateInput, monthInput, yearInput);

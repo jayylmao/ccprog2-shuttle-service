@@ -213,6 +213,9 @@ int searchForLowerPriority(int priority, Trip trip)
 	int passengerCount;
 	passengerCount = trip.passengerCount;
 
+	// if statement uses < because smaller number is greater priority in the system. 
+	// ex: 1 is higher priority than 2, so if passenger 3 has prio 2 but the passenger
+	// we're adding has prio 1, passenger 3 has a lower prio.
 	for (i = 0; i < passengerCount; i++) {
 		if (trip.passengers[i].priorityNumber < priority) {
 			return i;

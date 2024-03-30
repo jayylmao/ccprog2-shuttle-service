@@ -19,6 +19,8 @@ void writeFile(Trip *trips, int nTrips, Date date)
 	char dropOffPoint[MAX];
 
 	char destPath[MAX];
+	
+	// snprintf() lets you copy a formatted string to a destination string.
 	snprintf(destPath, sizeof(destPath), "./trips/%02d-%02d-%04d.txt", date.date, date.month, date.year);
 
 	// this is for file reading/writing/appending

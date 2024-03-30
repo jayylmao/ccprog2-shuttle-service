@@ -82,7 +82,7 @@ int inputTripNumber()
 		tripNumber = atoi(input);
 		tripIndex = getTripIndex(tripNumber);
 
-		if (tripIndex == -1) {
+		if (tripIndex == -1 || tripIndex == 110 || tripIndex == 161) {
 			system("clear||cls");
 			printf(YELLOW"[*]: Enter a valid trip number (101 - 109, 150 - 160).\n"RESET);
 		}
@@ -212,6 +212,7 @@ int inputDropOff(int embarkPoint, int route)
 					printf(YELLOW"[2.] "RESET"Phase 5, San Jose Village\n");
 					printf(YELLOW"[3.] "RESET"Milagros Del Rosario Building - East Canopy\n");
 					menuLimit = 3;
+					offset = 0;
 				} else {
 					printf("Via ETON exit\n");
 					printf(YELLOW"[1.] "RESET"Laguna Blvd. Guard House\n");
