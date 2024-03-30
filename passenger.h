@@ -205,41 +205,41 @@ int inputDropOff(int embarkPoint, int route)
 		// shows a different set of available routes depending on the user embark point and set trip route.
 		printf(YELLOW"Route: "RESET);
 		switch (embarkPoint) {
-		case 0:
-			if (route == 0) {
-				printf("Via Mamplasan exit\n");
-				printf(YELLOW"[1.] "RESET"Mamplasan Toll Exit\n");
-				printf(YELLOW"[2.] "RESET"Phase 5, San Jose Village\n");
-				printf(YELLOW"[3.] "RESET"Milagros Del Rosario Building - East Canopy\n");
-				menuLimit = 3;
-			} else {
-				printf("Via ETON exit\n");
-				printf(YELLOW"[1.] "RESET"Laguna Blvd. Guard House\n");
-				printf(YELLOW"[2.] "RESET"Milagros Del Roasrio Building - East Canopy\n");
-				menuLimit = 2;
-				offset = 3;
-			}
-			break;
-		case 1:
-			menuLimit = 4;
+			case 0:
+				if (route == 0) {
+					printf("Via Mamplasan exit\n");
+					printf(YELLOW"[1.] "RESET"Mamplasan Toll Exit\n");
+					printf(YELLOW"[2.] "RESET"Phase 5, San Jose Village\n");
+					printf(YELLOW"[3.] "RESET"Milagros Del Rosario Building - East Canopy\n");
+					menuLimit = 3;
+				} else {
+					printf("Via ETON exit\n");
+					printf(YELLOW"[1.] "RESET"Laguna Blvd. Guard House\n");
+					printf(YELLOW"[2.] "RESET"Milagros Del Roasrio Building - East Canopy\n");
+					menuLimit = 2;
+					offset = 3;
+				}
+				break;
+			case 1:
+				menuLimit = 4;
 
-			if (route == 0) {
-				printf("Via Estrada\n");
-				printf(YELLOW"[1.] "RESET"Petron Gasoline Station along Gil Puyat Avenue\n");
-				printf(YELLOW"[2.] "RESET"Gate 4: Gokongwei Gate\n");
-				printf(YELLOW"[3.] "RESET"Gate 2: North Gate (HSSH)\n");
-				printf(YELLOW"[4.] "RESET"Gate 1: South Gate (LS Building Entrance)\n");
-				offset = 5;
-			} else {
-				printf("Via Buendia/LRT\n");
-				printf(YELLOW"[1.] "RESET"College of St. Benilde (CSB) Along Taft\n");
-				printf(YELLOW"[2.] "RESET"Gate 4: Gokongwei Gate\n");
-				printf(YELLOW"[3.] "RESET"Gate 2: North Gate (HSSH)\n");
-				printf(YELLOW"[4.] "RESET"Gate 1: South Gate (LS Building Entrance)\n");
-				offset = 9;
-			}
-		default:
-			break;
+				if (route == 0) {
+					printf("Via Estrada\n");
+					printf(YELLOW"[1.] "RESET"Petron Gasoline Station along Gil Puyat Avenue\n");
+					printf(YELLOW"[2.] "RESET"Gate 4: Gokongwei Gate\n");
+					printf(YELLOW"[3.] "RESET"Gate 2: North Gate (HSSH)\n");
+					printf(YELLOW"[4.] "RESET"Gate 1: South Gate (LS Building Entrance)\n");
+					offset = 5;
+				} else {
+					printf("Via Buendia/LRT\n");
+					printf(YELLOW"[1.] "RESET"College of St. Benilde (CSB) Along Taft\n");
+					printf(YELLOW"[2.] "RESET"Gate 4: Gokongwei Gate\n");
+					printf(YELLOW"[3.] "RESET"Gate 2: North Gate (HSSH)\n");
+					printf(YELLOW"[4.] "RESET"Gate 1: South Gate (LS Building Entrance)\n");
+					offset = 9;
+				}
+			default:
+				break;
 		}
 		
 		printf(BLUE"Choose a drop-off point: "RESET);
@@ -342,37 +342,37 @@ void passengerRoutine(Date date, Trip *trips, int nTrips)
 	// each step of the passenger add process is its own function that validates and returns the inputted info.
 	do {
 		switch (page) {
-		case 0:
-			passenger.tripNumber = inputTripNumber();
-			trip = trips[getTripIndex(passenger.tripNumber)];
-			page++;
-			break;
-		case 1:
-			passenger.priorityNumber = inputPriorityNumber();
-			page++;
-			break;
-		case 2:
-			passenger.name = inputName();
-			page++;
-			break;
-		case 3:
-			inputId(passenger.id);
-			page++;
-			break;
-		case 4:
-			passenger.dropOffPt = inputDropOff(trip.embarkPt, trip.route);
-			page++;
-			break;
-		case 5:
-			done = reviewDetails(passenger, trip.embarkPt, trip.route, trips);
-			if (done) {
+			case 0:
+				passenger.tripNumber = inputTripNumber();
+				trip = trips[getTripIndex(passenger.tripNumber)];
 				page++;
-			} else {
-				page = 0;
-			}
-			break;
-		default:
-			break;
+				break;
+			case 1:
+				passenger.priorityNumber = inputPriorityNumber();
+				page++;
+				break;
+			case 2:
+				passenger.name = inputName();
+				page++;
+				break;
+			case 3:
+				inputId(passenger.id);
+				page++;
+				break;
+			case 4:
+				passenger.dropOffPt = inputDropOff(trip.embarkPt, trip.route);
+				page++;
+				break;
+			case 5:
+				done = reviewDetails(passenger, trip.embarkPt, trip.route, trips);
+				if (done) {
+					page++;
+				} else {
+					page = 0;
+				}
+				break;
+			default:
+				break;
 		}
 		system("clear||cls");
 	} while (!done);

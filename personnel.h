@@ -36,7 +36,7 @@ void viewPassCount(Trip trips[], int nTrips)
 		if (!tripFound) {
 			printf(YELLOW"[*]: Invalid trip number.\n"RESET);
 		}
-	} while (input != 0);
+	} while (strcmp(buffer, "0") != 0);
 
 	system("clear||cls");
 }
@@ -88,35 +88,35 @@ void viewPassAtDrop(Trip trips[], int nTrips)
 			}
 
 			switch (trip.embarkPt) {
-			case 0:
-				if (trip.route == 0) {
-					printf(YELLOW"Trip %d:" RESET " Via Mamplasan exit\n", trip.tripNumber);
-					printf(YELLOW"[1.] Mamplasan Toll Exit:" RESET " %d\n", dropOffCounter[0]);
-					printf(YELLOW"[2.] Phase 5, San Jose Village:" RESET " %d\n", dropOffCounter[1]);
-					printf(YELLOW"[3.] Milagros Del Rosario Building - East Canopy:" RESET " %d\n", dropOffCounter[2]);
-				} else {
-					printf(YELLOW"Trip %d:" RESET " Via ETON exit\n", trip.tripNumber);
-					printf(YELLOW"[1.] Laguna Blvd. Guard House:" RESET " %d\n,", dropOffCounter[3]);
-					printf(YELLOW"[2.] Milagros Del Roasrio Building - East Canopy:" RESET " %d\n", dropOffCounter[4]);
-				}
-				break;
-			case 1:
-				if (trip.route == 0) {
-					printf(YELLOW"Trip %d:" RESET " Via Estrada\n", trip.tripNumber);
-					printf(YELLOW"[1.] Petron Gasoline Station along Gil Puyat Avenue:" RESET " %d\n", dropOffCounter[5]);
-					printf(YELLOW"[2.] Gate 4: Gokongwei Gate:" RESET " %d\n", dropOffCounter[6]);
-					printf(YELLOW"[3.] Gate 2: North Gate (HSSH):" RESET " %d\n", dropOffCounter[7]);
-					printf(YELLOW"[4.] Gate 1: South Gate (LS Building Entrance):" RESET " %d\n", dropOffCounter[8]);
-				} else {
-					printf(YELLOW"Trip %d:" RESET " Via Buendia/LRT\n", trip.tripNumber);
-					printf(YELLOW"[1.] College of St. Benilde (CSB) Along Taft:" RESET " %d\n", dropOffCounter[9]);
-					printf(YELLOW"[2.] Gate 4: Gokongwei Gate:" RESET " %d\n", dropOffCounter[10]);
-					printf(YELLOW"[3.] Gate 2: North Gate (HSSH):" RESET " %d\n", dropOffCounter[11]);
-					printf(YELLOW"[4.] Gate 1: South Gate (LS Building Entrance):" RESET " %d\n", dropOffCounter[12]);
-				}
-				break;
-			default:
-				break;
+				case 0:
+					if (trip.route == 0) {
+						printf(YELLOW"Trip %d:" RESET " Via Mamplasan exit\n", trip.tripNumber);
+						printf(YELLOW"[1.] Mamplasan Toll Exit:" RESET " %d\n", dropOffCounter[0]);
+						printf(YELLOW"[2.] Phase 5, San Jose Village:" RESET " %d\n", dropOffCounter[1]);
+						printf(YELLOW"[3.] Milagros Del Rosario Building - East Canopy:" RESET " %d\n", dropOffCounter[2]);
+					} else {
+						printf(YELLOW"Trip %d:" RESET " Via ETON exit\n", trip.tripNumber);
+						printf(YELLOW"[1.] Laguna Blvd. Guard House:" RESET " %d\n,", dropOffCounter[3]);
+						printf(YELLOW"[2.] Milagros Del Roasrio Building - East Canopy:" RESET " %d\n", dropOffCounter[4]);
+					}
+					break;
+				case 1:
+					if (trip.route == 0) {
+						printf(YELLOW"Trip %d:" RESET " Via Estrada\n", trip.tripNumber);
+						printf(YELLOW"[1.] Petron Gasoline Station along Gil Puyat Avenue:" RESET " %d\n", dropOffCounter[5]);
+						printf(YELLOW"[2.] Gate 4: Gokongwei Gate:" RESET " %d\n", dropOffCounter[6]);
+						printf(YELLOW"[3.] Gate 2: North Gate (HSSH):" RESET " %d\n", dropOffCounter[7]);
+						printf(YELLOW"[4.] Gate 1: South Gate (LS Building Entrance):" RESET " %d\n", dropOffCounter[8]);
+					} else {
+						printf(YELLOW"Trip %d:" RESET " Via Buendia/LRT\n", trip.tripNumber);
+						printf(YELLOW"[1.] College of St. Benilde (CSB) Along Taft:" RESET " %d\n", dropOffCounter[9]);
+						printf(YELLOW"[2.] Gate 4: Gokongwei Gate:" RESET " %d\n", dropOffCounter[10]);
+						printf(YELLOW"[3.] Gate 2: North Gate (HSSH):" RESET " %d\n", dropOffCounter[11]);
+						printf(YELLOW"[4.] Gate 1: South Gate (LS Building Entrance):" RESET " %d\n", dropOffCounter[12]);
+					}
+					break;
+				default:
+					break;
 			}
 			
 			printf("\n");
@@ -255,43 +255,64 @@ void searchPass(Trip trips[], int nTrips)
 
 /*
  *	viewRecentFile lets the user select a file to view, without overwriting the current data in memory.
- *	Solution by: Tyrrelle Mendoza
+ *	Solution by: Tyrrelle Mendoza, modified by: Jay Carlos
  *	Precondition: None.
  *	@return None.
  */
 void viewRecentFile()
 {
-	
 	Trip trips[TRIP_COUNT];
+	bool success;
+
 	char date[MAX], month[MAX], year[MAX];
 	Date dateStruct;
-	bool exit = false;
-	bool success = false;
+
+	char filename[MAX];
+	int i, j;
+
+	char route[MAX], dropOff[MAX];
 
 	initializeBuses(trips, TRIP_COUNT);
 
-	printHeader(YELLOW"View file"RESET, 80);
+	printHeader(YELLOW"View recent file"RESET, 80);
 
-	do {		
-		printf(BLUE"Enter a date to view (DD MM YYYY), or 0 0 0 to return: "RESET);
-		scanf("%s %s %s", date, month, year);
-		dateStruct.date = atoi(date);
-		dateStruct.month = atoi(month);
-		dateStruct.year = atoi(year);
+	do {
+		printf(BLUE"Type the date of the file to view passengers from, or 0 to return: "RESET);
+		scanf("%s", date);
+		
+		if (strcmp(date, "0") != 0) {
+			scanf("%s %s", month, year);
 
-		system("clear||cls");
-		printHeader(YELLOW"View file"RESET, 80);
+			dateStruct.date = atoi(date);
+			dateStruct.month = atoi(month);
+			dateStruct.year = atoi(year);
 
-		if (dateStruct.date == 0 && dateStruct.month == 0 && dateStruct.year == 0) {
-			exit = true;
+			system("clear||cls");
+			printHeader(YELLOW"View recent file"RESET, 80);
+
+			success = readProgramOutputFile(trips, dateStruct);
+		}
+
+		if (!success && strcmp(date, "0") != 0) {
+			printf(YELLOW"[*]: Could not read file %s.\n"RESET, filename);
 		} else {
-			success = readTrips(trips, dateStruct);
-		}
+			for (i = 0; i < TRIP_COUNT; i++) {
+				if (trips[i].passengerCount > 0) {
+					getRouteName(trips[i].route, trips[i].embarkPt, route);
+					printf("AE%d\n%s\n", trips[i].tripNumber, route);
 
-		if (!success && !exit) {
-			printf(YELLOW"[*]: Could not find file %02d-%02d-%04d.txt in directory ./trips/.\n"RESET, dateStruct.date, dateStruct.month, dateStruct.year);
+					for (j = 0; j < trips[i].passengerCount; j++) {
+						printf(YELLOW"[%02d.] Name    : "RESET"%s %s\n", j + 1, trips[i].passengers[j].name.firstName, trips[i].passengers[j].name.lastName);
+						printf(YELLOW"      ID      : "RESET"%s\n", trips[i].passengers[j].id);
+						printf(YELLOW"      Priority: "RESET"%d\n", trips[i].passengers[j].priorityNumber);
+						
+						getDropOffName(trips[i].passengers[j].dropOffPt, dropOff);
+						printf(YELLOW"      Drop-off: "RESET"%s\n\n", dropOff);
+					}
+				}
+			}
 		}
-	} while(!exit);
+	} while (strcmp(date, "0") != 0);
 
 	system("clear||cls");
 }
@@ -299,7 +320,7 @@ void viewRecentFile()
 /*
  *	addPassInfo lets you add passengers from a file instead of inputting them manually.
  *	Note that this file follows a different format from the program output.
- *	Solution by: Jay Carlos
+ *	Solution by: Jay Carlos, modified by: Tyrrelle Mendoza
  *	Precondition: File is formatted properly.
  *	@param trips[] List of trips to add passengers to.
  *	@param nTrips Number of trips in list.
@@ -308,16 +329,24 @@ void addPassInfo(Trip trips[], int nTrips)
 {
 	FILE *fp;
 	char filename[MAX];
+
+	// temporary array to store passengers in.
 	Passenger passengers[16];
+
+	// number of passengers.
 	int passNum = 0;
 	int i;
 
+	// line count.
 	int line;
+
+	// buffers for fscanf().
 	char buffer[MAX];
 	char buffer2[MAX];
 
 	printHeader(YELLOW"Add passenger from file"RESET, 80);
 
+	// validate input. if no file is found with user input, and user doesn't enter the exit code, keep asking for a filename.
 	do {
 		printf(BLUE"Type the name of the file to add passengers from, or 0 to return: "RESET);
 		scanf("%s", filename);
@@ -332,89 +361,56 @@ void addPassInfo(Trip trips[], int nTrips)
 		}
 	} while (fp == NULL && strcmp(filename, "0") != 0);
 
+	// if exit code is detected, exit function.
 	if (strcmp(filename, "0") == 0) {
 		system("clear||cls");
 		return;
 	}
 
+	// start at -1 so first line will be 0.
 	line = -1;
 
+	// add the first 16 passengers in the file.
 	while (!feof(fp) && passNum < 16) {
+		// first line is always name, so format is 2 strings, separated by a space.
 		if (line % 5 == 1) {
 			fscanf(fp, "%s %s", buffer, buffer2);
-		} else {
+		} else {	// otherwise, format is 1 string.
 			fscanf(fp, "%s", buffer);
 		}
 
+		// increment line count
 		line++;
 
+		// line order in file: trip number - priority number - name - id - drop off point
 		switch (line % 5) {
-		case 0:
-			passengers[passNum].tripNumber = atoi(buffer);
-			break;
-		case 1:
-			passengers[passNum].priorityNumber = atoi(buffer);
-			break;
-		case 2:
-			strcpy(passengers[passNum].name.firstName, buffer);
-			strcpy(passengers[passNum].name.lastName, buffer2);
-			break;
-		case 3:
-			strcpy(passengers[passNum].id, buffer);
-			break;
-		case 4:
-			passengers[passNum].dropOffPt = atoi(buffer);
-			passNum++;
-			break;
-		default:
-			break;
+			case 0:
+				passengers[passNum].tripNumber = atoi(buffer);
+				break;
+			case 1:
+				passengers[passNum].priorityNumber = atoi(buffer);
+				break;
+			case 2:
+				strcpy(passengers[passNum].name.firstName, buffer);
+				strcpy(passengers[passNum].name.lastName, buffer2);
+				break;
+			case 3:
+				strcpy(passengers[passNum].id, buffer);
+				break;
+			case 4:
+				passengers[passNum].dropOffPt = atoi(buffer);
+				passNum++;
+				break;
+			default:
+				break;
 		}
 	}
 
+	// add passengers to memory.
 	for (i = 0; i < passNum; i++) {
 		addPassenger(passengers[i], trips, getTripIndex(passengers[i].tripNumber));
 	}
 
 	system("clear||cls");
+	printf(GREEN"[/]: %d passengers were succesfully added from the file.\n"RESET, passNum);
 }
-
-// /*
-//  *	loadPassInfo allows the user to load passengers into memory from a file, overwriting current data. 
-//  *	Solution by: Tyrrelle Mendoza
-//  *	@param trips[] List of trips in memory.
-//  *	@param nTrips Number of trips in array.
-//  *	@return None.
-//  */
-// void loadPassInfo(Trip trips[], int nTrips)
-// {
-// 	Trip newTrips[nTrips];
-// 	Date dateStruct;
-// 	char date[MAX], month[MAX], year[MAX];
-// 	int i, success;
-
-// 	initializeBuses(trips, TRIP_COUNT);
-// 	initializeBuses(newTrips, TRIP_COUNT);
-
-// 	printHeader(YELLOW"Load passengers from file"RESET, 80);
-// 	do {
-// 		printf(BLUE"Enter a date to view (DD MM YYYY): "RESET);
-// 		scanf("%s %s %s", date, month, year);
-
-// 		dateStruct.date = atoi(date);
-// 		dateStruct.month = atoi(month);
-// 		dateStruct.year = atoi(year);
-		
-// 		success = readTrips(newTrips, dateStruct);
-
-// 		system("clear||cls");
-// 		printHeader(YELLOW"Load passengers from file"RESET, 80);
-
-// 		if (success) {
-// 			for (i = 0; i < nTrips; i++) {
-// 				trips[i] = newTrips[i];
-// 			}
-// 		} else {
-// 			printf(YELLOW"[*]: Could not find file %s-%s-%s.\n"RESET, date, month, year);
-// 		}
-// 	} while (!success);
-// }

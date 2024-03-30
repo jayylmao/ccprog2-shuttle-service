@@ -41,37 +41,37 @@ void printHeader(char *message, int headerSize)
 void getDropOffName(int dropOffPt, char *dropOffString)
 {
 	switch (dropOffPt) {
-	case 1:
-		strcpy(dropOffString, "Mamplasan Toll Exit");
-		break;
-	case 2:
-		strcpy(dropOffString, "Phase 5, San Jose Village");
-		break;
-	case 3:
-	case 5:
-		strcpy(dropOffString, "Milagros Del Rosario (MRR) Building - East Canopy");
-		break;
-	case 4:
-		strcpy(dropOffString, "Laguna Blvd. Guard House");
-		break;
-	case 6:
-		strcpy(dropOffString, "Petron Gasoline Station along Gil Puyat Avenue");
-		break;
-	case 7:
-	case 11:
-		strcpy(dropOffString, "Gate 4: Gokongwei Gate");
-		break;
-	case 8:
-	case 12:
-		strcpy(dropOffString, "Gate 2: North Gate (HSSH)");
-		break;
-	case 9:
-	case 13:
-		strcpy(dropOffString, "Gate 1: South Gate (LS Building Entrance)");
-		break;
-	case 10:
-		strcpy(dropOffString, "College of St. Benilde (CSB) Along Taft");
-		break;
+		case 1:
+			strcpy(dropOffString, "Mamplasan Toll Exit");
+			break;
+		case 2:
+			strcpy(dropOffString, "Phase 5, San Jose Village");
+			break;
+		case 3:
+		case 5:
+			strcpy(dropOffString, "Milagros Del Rosario (MRR) Building - East Canopy");
+			break;
+		case 4:
+			strcpy(dropOffString, "Laguna Blvd. Guard House");
+			break;
+		case 6:
+			strcpy(dropOffString, "Petron Gasoline Station along Gil Puyat Avenue");
+			break;
+		case 7:
+		case 11:
+			strcpy(dropOffString, "Gate 4: Gokongwei Gate");
+			break;
+		case 8:
+		case 12:
+			strcpy(dropOffString, "Gate 2: North Gate (HSSH)");
+			break;
+		case 9:
+		case 13:
+			strcpy(dropOffString, "Gate 1: South Gate (LS Building Entrance)");
+			break;
+		case 10:
+			strcpy(dropOffString, "College of St. Benilde (CSB) Along Taft");
+			break;
 	}
 }
 
@@ -118,26 +118,26 @@ void getTime(int tripNumber, char *dest)
 void getPriorityGroupName(int priorityNumber, char *dest)
 {
 	switch (priorityNumber) {
-	case 1:
-		strcpy(dest, "Faculty & ASF with Inter-Campus Assignments");
-		break;
-	case 2:
-		strcpy(dest, "Students with Inter-campus subjects/thesis");
-		break;
-	case 3:
-		strcpy(dest, "Researchers");
-		break;
-	case 4:
-		strcpy(dest, "School Administrators");
-		break;
-	case 5:
-		strcpy(dest, "University Fellows");
-		break;
-	case 6:
-		strcpy(dest, "Employees and Students with official business");
-		break;
-	default:
-		break;
+		case 1:
+			strcpy(dest, "Faculty & ASF with Inter-Campus Assignments");
+			break;
+		case 2:
+			strcpy(dest, "Students with Inter-campus subjects/thesis");
+			break;
+		case 3:
+			strcpy(dest, "Researchers");
+			break;
+		case 4:
+			strcpy(dest, "School Administrators");
+			break;
+		case 5:
+			strcpy(dest, "University Fellows");
+			break;
+		case 6:
+			strcpy(dest, "Employees and Students with official business");
+			break;
+		default:
+			break;
 	}
 }
 
@@ -152,22 +152,22 @@ void getPriorityGroupName(int priorityNumber, char *dest)
 void getRouteName(int route, int embarkPt, char *dest)
 {
 	switch (embarkPt) {
-	case 0:
-		if (route == 0) {
-			strcpy(dest, "Via Mamplasan exit");
-		} else {
-			strcpy(dest, "Via ETON exit");
-		}
-		break;
-	case 1:
-		if (route == 0) {
-			strcpy(dest, "Via Estrada");
-		} else {
-			strcpy(dest, "Via Buendia/LRT");
-		}
-		break;
-	default:
-		break;
+		case 0:
+			if (route == 0) {
+				strcpy(dest, "Via Mamplasan exit");
+			} else {
+				strcpy(dest, "Via ETON exit");
+			}
+			break;
+		case 1:
+			if (route == 0) {
+				strcpy(dest, "Via Estrada");
+			} else {
+				strcpy(dest, "Via Buendia/LRT");
+			}
+			break;
+		default:
+			break;
 	}
 }
 
@@ -205,16 +205,13 @@ void personnelMenu(Trip trips[], Date date)
 		printf(YELLOW"[3.] View passenger information \n"RESET);
 		printf("Input a trip number to view all passengers on that trip.\n\n");
 
-		printf(YELLOW"[4.] Overwrite data from file [may be deprecated] \n"RESET);
-		printf("Select a file to load data from, overwriting current data.\n\n");
-
-		printf(YELLOW"[5.] Search passenger \n"RESET);
+		printf(YELLOW"[4.] Search passenger \n"RESET);
 		printf("Search for passengers by their last name.\n\n");
 
-		printf(YELLOW"[6.] Add passenger/s from file \n"RESET);
+		printf(YELLOW"[5.] Add passenger/s from file \n"RESET);
 		printf("Select a file to add passengers into the program.\n\n");
 
-		printf(YELLOW"[7.] View recent file \n"RESET);
+		printf(YELLOW"[6.] View recent file \n"RESET);
 		printf("Select a file to view all the trips from that day.\n\n");
 		
 		printf(BLUE"Choose an option: ");
@@ -224,32 +221,29 @@ void personnelMenu(Trip trips[], Date date)
 
 		// the functions below are found in personnel.h
 		switch (userChoice) {
-		case '0':
-			break;
-		case '1':
-			viewPassCount(trips, TRIP_COUNT);
-			break;
-		case '2':
-			viewPassAtDrop(trips, TRIP_COUNT);
-			break;
-		case '3':
-			viewPassInfo(trips, TRIP_COUNT);
-			break;
-		case '4':
-			// loadPassInfo(trips, TRIP_COUNT);
-			break;
-		case '5':
-			searchPass(trips, TRIP_COUNT);
-			break;
-		case '6':
-			addPassInfo(trips, TRIP_COUNT);
-			break;
-		case '7':
-			viewRecentFile();
-			break;
-		default:
-			printf(YELLOW"[*]: Please input a number from 0 - 7.\n"RESET);
-			break;
+			case '0':
+				break;
+			case '1':
+				viewPassCount(trips, TRIP_COUNT);
+				break;
+			case '2':
+				viewPassAtDrop(trips, TRIP_COUNT);
+				break;
+			case '3':
+				viewPassInfo(trips, TRIP_COUNT);
+				break;
+			case '4':
+				searchPass(trips, TRIP_COUNT);
+				break;
+			case '5':
+				addPassInfo(trips, TRIP_COUNT);
+				break;
+			case '6':
+				viewRecentFile();
+				break;
+			default:
+				printf(YELLOW"[*]: Please input a number from 0 - 6.\n"RESET);
+				break;
 		}
 	} while (userChoice != '0');
 }
@@ -312,17 +306,17 @@ void mainMenu()
 		printf(RESET);
 
 		switch (userChoice) {
-		case '0':
-			break;
-		case '1':
-			passengerRoutine(dateStruct, trips, TRIP_COUNT);
-			break;
-		case '2':
-			personnelMenu(trips, dateStruct);
-			break;
-		default:
-			printf(YELLOW"[*] Please input a number from 0 - 2.\n"RESET);
-			break;
+			case '0':
+				break;
+			case '1':
+				passengerRoutine(dateStruct, trips, TRIP_COUNT);
+				break;
+			case '2':
+				personnelMenu(trips, dateStruct);
+				break;
+			default:
+				printf(YELLOW"[*] Please input a number from 0 - 2.\n"RESET);
+				break;
 		}
 	} while (userChoice != '0');
 

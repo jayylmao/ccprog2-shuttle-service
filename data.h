@@ -14,16 +14,19 @@ int getTripNumber(int tripIndex)
 
 	fp = fopen("./config/tripSched.txt", "r");
 
+	// file not found.
 	if (fp == NULL) {
 		printf(RED"[!]: Trip schedule file (./config/tripSched.txt) could not be found.\n"RESET);
 		return tripNumber;
 	}
 
+	// for each line in the file until i is not equal to the given index, increment i.
 	while (!feof(fp) && i < tripIndex) {
 		fscanf(fp, "%d %d %d", &tripNumber, &hour, &minute);
 		i++;
 	}
 
+	// the trip number is found at the start of the line and will be returned.
 	return tripNumber;
 }
 
@@ -45,11 +48,14 @@ int getTripIndex(int tripNumber)
 
 	fp = fopen("./config/tripSched.txt", "r");
 
+	// file not found.
 	if (fp == NULL) {
 		printf(RED"[!]: Trip schedule file (./config/tripSched.txt) could not be found.\n"RESET);
 		return tripIndex;
 	}
 
+	// while the trip number in the line being read from the file has not matched the given trip number,
+	// increment the trip index.
 	while (!feof(fp) && fileTripNumber != tripNumber) {
 		fscanf(fp, "%d %d %d", &fileTripNumber, &hour, &minute);
 		tripIndex++;
@@ -73,7 +79,7 @@ int getTripIndex(int tripNumber)
  *	Precondition: Valid place name, route, and embarkation point given.
  *	@param route Integer corresponding to route of trip.
  *	@param embarkNum Embarkation point of trip.
- *	@param *dest Character array to save drop-off point name to.
+ *	@param *dest Character array to compare drop-off point name to.
  *	@return Integer corresponding to a given string name.
  */
 int getDropOff(int route, int embarkNum, char *dest)
@@ -103,7 +109,7 @@ int getDropOff(int route, int embarkNum, char *dest)
         dest[len - 1] = '\0';
     }
 
-	if (!embarkNum) {
+	if (embarkNum == 0) {
 		if (!route) // 0
 		{
 			if (strcmp("Mamplasan Toll Exit", dest) == 0) return 1;
@@ -113,7 +119,7 @@ int getDropOff(int route, int embarkNum, char *dest)
 			if (strcmp("Laguna Blvd. Guard House", dest) == 0) return 4;
 			else if (strcmp("Milagros Del Roasrio Building - East Canopy", dest) == 0) return 5;
 		}
-	} else if (embarkNum) {
+	} else if (embarkNum == 1) {
 		if (!route)
 		{
 			if (strcmp("Petron Gasoline Station along Gil Puyat Avenue", dest) == 0) return 6;
@@ -182,15 +188,15 @@ void initializeBuses(Trip trips[], int nTrips)
 void getEmbarkationPointName(int embarkPtInt, char embarkName[])
 {
 	switch (embarkPtInt) {
-	case 0:
-		strcpy(embarkName, "South Gate Driveway (Manila Campus)");
-		break;
-	case 1:
-		strcpy(embarkName, "Milagros del Rosario Building - East Canopy (Laguna Campus)");
-		break;
-	default:
-		strcpy(embarkName, "Unknown embarkation point.");
-		break;
+		case 0:
+			strcpy(embarkName, "South Gate Driveway (Manila Campus)");
+			break;
+		case 1:
+			strcpy(embarkName, "Milagros del Rosario Building - East Canopy (Laguna Campus)");
+			break;
+		default:
+			strcpy(embarkName, "Unknown embarkation point.");
+			break;
 	}
 }	
 
@@ -235,6 +241,9 @@ void addPassenger(Passenger passenger, Trip *trips, int n)
 
 		if (lowerPriorityPassenger == -1 && trips[n].embarkPt == trips[n + 1].embarkPt) {
 			printf(YELLOW"[*]: You have been moved to AE%d.\n"RESET, getTripNumber(n + 1));
+			if (getTripNumber(n + 1) == 110 || getTripNumber(n + 1) == 161) {
+				printf(YELLOW"[*]: Due to a high amount of passengers, an emergency shuttle has been dispatched.\n"RESET);
+			}
 			addPassenger(passenger, trips, n + 1); // if no lower priority found, try next bus.
 		} else if (trips[n].embarkPt == trips[n + 1].embarkPt) {
 			printf(YELLOW"[*]: A person of lower priority has been moved to AE%d to make space for you.\n"RESET, getTripNumber(n + 1));

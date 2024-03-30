@@ -34,7 +34,7 @@ void writeFile(Trip *trips, int nTrips, Date date)
 	for (i = 0; i < nTrips; i++) {
 		passengerCount = trips[i].passengerCount;
 		
-		fprintf(fp, "%d\n", trips[i].tripNumber);
+		fprintf(fp, "AE%d\n", trips[i].tripNumber);
 		getEmbarkationPointName(trips[i].embarkPt, embarkPoint);
 		fprintf(fp, "%s\n", embarkPoint);
 
@@ -47,7 +47,7 @@ void writeFile(Trip *trips, int nTrips, Date date)
 			fprintf(fp, "%d\n", passenger.priorityNumber);
 
 			getDropOffName(passenger.dropOffPt, dropOffPoint);
-			fprintf(fp, "%s\n", dropOffPoint);
+			fprintf(fp, "%s\n\n", dropOffPoint);
 		}
 
 		if (passengerCount == 0) {
@@ -65,10 +65,10 @@ void writeFile(Trip *trips, int nTrips, Date date)
  *  @param date Date to base file name from.
  *  @return Success indicator.
  */
-bool readTrips(Trip trips[], Date date)
+bool readTrips(Trip trips[], char filename[])
 {
 	FILE *fp;
-	int dropOff, i;
+	int i;
 	
 	// number of passengers
 	int passNum = 0;
@@ -80,13 +80,94 @@ bool readTrips(Trip trips[], Date date)
 	int tripNum = 0;
 
 	// track which line is being read.
-	int lineNum = 1;
+	int line = 1;
 
 	char buffer[MAX];
+	char buffer2[MAX];
+
+	fp = fopen(filename, "r");
+
+	if (fp == NULL) {
+		return false;
+	}
+
+	line = 0;
+	
+	while (!feof(fp)) {
+		
+		if (line % 5 == 2) {
+			fscanf(fp, "%s %s", buffer, buffer2);
+		} else {
+			fscanf(fp, "%s", buffer);
+		}
+
+		for (i = 0; i < TRIP_COUNT; i++) {
+			if (trips[i].tripNumber == atoi(buffer) && trips[tripNum].passengerCount <= 16) {
+				passNum = trips[i].passengerCount;
+				tripNum = i;
+			}
+		}
+
+		switch (line % 5) {
+			case 0:
+				trips[tripNum].passengers[passNum].tripNumber = atoi(buffer);
+				printf(YELLOW"Trip Number: "RESET"AE%d\n", trips[tripNum].tripNumber);
+				printf(YELLOW"Passenger Index: "RESET"[%d]\n", trips[tripNum].passengerCount);
+				break;
+			case 1:
+				trips[tripNum].passengers[passNum].priorityNumber = atoi(buffer);
+				printf(YELLOW"Priority: "RESET"%d\n", trips[tripNum].passengers[passNum].priorityNumber);
+				break;
+			case 2:
+				strcpy(trips[tripNum].passengers[passNum].name.firstName, buffer);
+				strcpy(trips[tripNum].passengers[passNum].name.lastName, buffer2);
+				printf(YELLOW"Name: "RESET"%s %s\n", buffer, buffer2);
+				break;
+			case 3:
+				strcpy(trips[tripNum].passengers[passNum].id, buffer);
+				printf(YELLOW"ID: "RESET"%s\n", trips[tripNum].passengers[passNum].id);
+				break;
+			case 4:
+				trips[tripNum].passengers[passNum].dropOffPt = atoi(buffer);
+				getDropOffName(atoi(buffer), buffer2);
+				printf(YELLOW"Drop-Off: "RESET"[%d.] %s\n\n", trips[tripNum].passengers[passNum].dropOffPt, buffer2);
+				(trips[tripNum].passengerCount)++;
+				totalPass++;
+				break;
+			default:
+				break;
+		}
+		line++;
+	}
+
+	printf(YELLOW"Total passengers: "RESET"%d\n", totalPass);
+
+	fclose(fp);
+	return true;
+}
+
+/*
+ *  readProgramOutputFile reads all trips from a file of a given date for viewing.
+ *	Solution by: Tyrrelle Mendoza, modified by: Jay Carlos
+ *  Precondition: Valid date format given.
+ *  @param date Date to base file name from.
+ *  @return Success indicator.
+ */
+bool readProgramOutputFile(Trip trips[], Date date)
+{
+	FILE *fp;
+	
+	// number of passengers
+	int passNum = 0;
+
+	// trip index to save current data to.
+	int tripNum = -1;
+
+	// track which line is being read.
+	int line = 0;
 	char sourcePath[MAX];
 
-	char firstName[MAX];
-	char lastName[MAX];
+	char buffer[MAX];
 
 	// create source path based on given date.
 	snprintf(sourcePath, sizeof(sourcePath), "./trips/%02d-%02d-%02d.txt", date.date, date.month, date.year);
@@ -97,91 +178,45 @@ bool readTrips(Trip trips[], Date date)
 	}
 	
 	while (!feof(fp)) {
-		lineNum = 1;
-		fscanf(fp, "%s %s", firstName, lastName);
+		fgets(buffer, sizeof(buffer), fp);
+		line++;
 
-		//check if name contains the bus number
-		if (atoi(firstName) >= 101 && atoi(firstName) <= 161)
-		{
-			// Finalize Previous Trip Values
+		// buffer + 2 removes the first two chars "AE", allowing the number to be converted to an integer for comparison.
+		if (atoi(buffer + 2) >= 101 && atoi(buffer + 2) <= 161) {
 			trips[tripNum].passengerCount = passNum;
-			printf(YELLOW"Passengers in AE%d: "RESET"%d\n\n", trips[tripNum].tripNumber, passNum);
-
-			// Reset Passenger Index
+			line = -1;
 			passNum = 0;
-			
-			// scan the index that has trip number
-
-			for (i = 0; i < TRIP_COUNT; i++)
-			{
-				if (trips[i].tripNumber == atoi(firstName))
-				{
-					tripNum = i;
-				}
-			}
-
-			// use this to scan through struct
-			printf(YELLOW"Trip Number: "RESET"AE%d\n", trips[tripNum].tripNumber);
-
-			//get newline
-			fgets(buffer, MAX, fp);
+			tripNum++;
+			trips[tripNum].tripNumber = atoi(buffer + 2);
 		} else {
-			while (lineNum)
-			{
-				switch(lineNum)
-				{
-					case 1:
-						strcpy(trips[tripNum].passengers[passNum].name.firstName, firstName);
-						strcpy(trips[tripNum].passengers[passNum].name.lastName, lastName);
-						printf(YELLOW"Name: "RESET"%s %s\n", firstName, lastName);
-						break;
-					case 2:
-						// get ID buffer
-						fscanf(fp, "%s", buffer);
-						
-						strcpy(trips[tripNum].passengers[passNum].id, buffer);
-						// printf(YELLOW"ID: "RESET"%s\n", buffer);
-						printf(YELLOW"ID: "RESET"%s\n", trips[tripNum].passengers[passNum].id);
-						break;
-					case 3:
-						// get Priority buffer
-						fscanf(fp, "%s", buffer);
-					
-						trips[tripNum].passengers[passNum].priorityNumber = atoi(buffer);
-						// printf(YELLOW"Priority: "RESET"%d\n", atoi(buffer));
-						printf(YELLOW"Priority: "RESET"%d\n", trips[tripNum].passengers[passNum].priorityNumber);
-
-						break;
-					case 4:
-						// catch drop-off
-						// make a function that can return the int value of dropoffPt
-						
-						fgets(buffer, MAX, fp);
-
-						dropOff = getDropOff(trips[tripNum].route, trips[tripNum].embarkPt, buffer);
-
-						trips[tripNum].passengers[passNum].dropOffPt = dropOff;
-
-						// printf(YELLOW"Drop-Off: "RESET"[%d.] %s\n\n", dropOff, buffer);
-						printf(YELLOW"Drop-Off: "RESET"[%d.] %s\n\n", trips[tripNum].passengers[passNum].dropOffPt, buffer);
-
-						passNum++;
-						totalPass++;
-						break;
-					default:
-						break;
-				}
-
-				// catch newline
-				fgets(buffer, MAX, fp);
-
-				if (lineNum == 4) lineNum = 0;
-				else lineNum++;
+			switch (line) {
+				case 1:
+					// detect if line is not empty before copying name from file.
+					if (buffer[0] != '\0') {
+						sscanf(buffer, "%s %s", trips[tripNum].passengers[passNum].name.firstName, trips[tripNum].passengers[passNum].name.lastName);
+					}
+					break;
+				case 2:
+					// strncpy() lets you define how many characters to copy.
+					// remember that buffer is 200 chars, while id is 9 (including null), so we only copy 8 chars.
+					// using regular strcpy() tries copying all 200 chars, resulting in an overflow -> trace trap.
+					strncpy(trips[tripNum].passengers[passNum].id, buffer, 8);
+					break;
+				case 3:
+					// 
+					trips[tripNum].passengers[passNum].priorityNumber = atoi(buffer);
+					break;
+				case 4:
+					trips[tripNum].passengers[passNum].dropOffPt = getDropOff(trips[tripNum].route, trips[tripNum].embarkPt, buffer);
+					passNum++;
+					fgets(buffer, sizeof(buffer), fp);
+					line = 0;
+					break;
+				default:
+					break;
 			}
 		}
 	}
-
-	printf(YELLOW"Total passengers: "RESET"%d", totalPass);
 
 	fclose(fp);
 	return true;
