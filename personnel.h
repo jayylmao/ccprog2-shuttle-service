@@ -1,3 +1,18 @@
+// Q1: why do all the inputs use %s even if we want an integer?
+//  A: inputting a char into a %d causes the program to freak out. %s doesn't have this issue,
+//     so we use a string (%s) as a buffer, before using atoi() to convert it to an integer.
+//     atoi() returns 0 if a string that isn't a number is given, which luckily for us,
+//     isn't a valid input for most things anyway.
+//     all functions that we pass user input into return -1 when an invalid input is given,
+//     so we can use that to determine whether user input was valid or not.
+// Follow-up Q: how does do-while detect 0 as the "cancel" command when atoi() returns 0 when an invalid input is given?
+//           A: the do-while condition checks the buffer, which is before it goes through atoi().
+//              if the user enters an invalid value like 'a' for trip number, the buffer is
+//              just 'a', while the atoi() conversion stored as the final input is 0.
+
+// Q2: why are all the inputs surrounded by do {} while()?
+//  A: this lets an invalid input display an error message and allow the user to try again.
+
 /*
  *	viewPassCount shows the number of passengers on a specified trip.
  *	Solution by: Jay Carlos
@@ -162,6 +177,7 @@ void viewPassInfo(Trip trips[], int nTrips)
 		passengerCount = trip.passengerCount;
 
 		if (passengerCount != 0) {
+			// new array to sort, so original data isn't affected.
 			Passenger sortedPassengers[passengerCount];
 
 			// copy all passengers to new array for sorting.
@@ -280,6 +296,9 @@ void viewRecentFile()
 		printf(BLUE"Type the date of the file to view passengers from, or 0 to return: "RESET);
 		scanf("%s", date);
 		
+		// Q: why is this split?
+		// A: it allows the user to type just one 0 to exit.
+		//    if the first digit is not 0, it continues the rest of the func.
 		if (strcmp(date, "0") != 0) {
 			scanf("%s %s", month, year);
 
@@ -293,6 +312,7 @@ void viewRecentFile()
 			success = readProgramOutputFile(trips, dateStruct);
 		}
 
+		// display error message if reading the output file was not successful.
 		if (!success && strcmp(date, "0") != 0) {
 			printf(YELLOW"[*]: Could not read file %s.\n"RESET, filename);
 		} else {
