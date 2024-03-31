@@ -111,7 +111,7 @@ void viewPassAtDrop(Trip trips[], int nTrips)
 						printf(YELLOW"[3.] Milagros Del Rosario Building - East Canopy:" RESET " %d\n", dropOffCounter[2]);
 					} else {
 						printf(YELLOW"Trip %d:" RESET " Via ETON exit\n", trip.tripNumber);
-						printf(YELLOW"[1.] Laguna Blvd. Guard House:" RESET " %d\n,", dropOffCounter[3]);
+						printf(YELLOW"[1.] Laguna Blvd. Guard House:" RESET " %d\n", dropOffCounter[3]);
 						printf(YELLOW"[2.] Milagros Del Roasrio Building - East Canopy:" RESET " %d\n", dropOffCounter[4]);
 					}
 					break;
