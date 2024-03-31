@@ -30,7 +30,7 @@ void viewPassCount(Trip trips[], int nTrips)
 	printHeader(YELLOW"Passenger Count Viewer"RESET, 80);
 
 	do {
-		printf(BLUE"Enter a trip number, or type 0 to return: AE");
+		printf(BLUE"Enter a trip number, or 0 to return: AE");
 		scanf("%s", buffer);
 		input = atoi(buffer);
 		printf(RESET);
@@ -165,7 +165,7 @@ void viewPassInfo(Trip trips[], int nTrips)
 	printHeader(YELLOW"View passenger info"RESET, 80);
 
 	do {
-		printf(BLUE"Enter a trip number: AE");
+		printf(BLUE"Enter a trip number, or 0 to return: AE");
 		scanf("%s", buffer);
 		printf(RESET);
 
