@@ -1,11 +1,11 @@
 /*
- *  writeFile takes all the trips in the array and writes all passenger and trip info
+ *	writeFile takes all the trips in the array and writes all passenger and trip info
  *	Solution by: Tyrrelle Mendoza, modified by: Jay Carlos
- *  to a file specified by the date.
- *  @param *trips Pointer to array of trips whose info will be written to the file.
- *  @param nTrips Number of trips in the array.
- *  @param date Date structure to determine file name.
- *  @return None.
+ *	to a file specified by the date.
+ *	@param *trips Pointer to array of trips whose info will be written to the file.
+ *	@param nTrips Number of trips in the array.
+ *	@param date Date structure to determine file name.
+ *	@return None.
  */
 void writeFile(Trip *trips, int nTrips, Date date)
 {
@@ -61,11 +61,11 @@ void writeFile(Trip *trips, int nTrips, Date date)
 }
 
 /*
- *  readProgramOutputFile reads all trips from a file of a given date for viewing.
+ *	readProgramOutputFile reads all trips from a file.
  *	Solution by: Tyrrelle Mendoza, modified by: Jay Carlos
- *  Precondition: Valid date format given.
- *  @param date Date to base file name from.
- *  @return Success indicator.
+ *	Precondition: Valid date format given.
+ *	@param date Date to base file name from.
+ *	@return Success indicator.
  */
 bool readProgramOutputFile(Trip trips[], Date date)
 {

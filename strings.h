@@ -18,12 +18,12 @@ void printHeader(char *message, int headerSize)
 }
 
 /*
- *  getDropOffName returns the name of a drop-off point given its integer representation in the program.
+ *	getDropOffName returns the name of a drop-off point given its integer representation in the program.
  *	Solution by: Jay Carlos
- *  Precondition: Valid drop-off point integer given.
- *  @param dropOffPt Integer representation of drop-off point in program
- *  @param dropOffString Character array to save name of drop-off point to.
- *  @return None.
+ *	Precondition: Valid drop-off point integer given.
+ *	@param dropOffPt Integer representation of drop-off point in program
+ *	@param dropOffString Character array to save name of drop-off point to.
+ *	@return None.
  */
 void getDropOffName(int dropOffPt, char *dropOffString)
 {
