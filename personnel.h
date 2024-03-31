@@ -432,5 +432,12 @@ void addPassInfo(Trip trips[], int nTrips)
 	}
 
 	system("clear||cls");
-	printf(GREEN"[/]: %d passengers were successfully added from the file.\n"RESET, passNum);
+
+	if (passNum == 1) {
+		printf(GREEN"[/]: %d passenger was successfully added from the file.\n"RESET, passNum);
+	} else if (passNum == 0) {
+		printf(YELLOW"[/]: No passengers could be added from the file.\n"RESET);
+	} else {
+		printf(GREEN"[/]: %d passenger was successfully added from the file.\n"RESET, passNum);
+	}
 }
