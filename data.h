@@ -74,8 +74,8 @@ int getTripIndex(int tripNumber)
 }
 
 /*
- *	Solution by: Tyrrelle Mendoza
  *	getDropOff returns an integer corresponding to a certain string name.
+ *	Solution by: Tyrrelle Mendoza
  *	Precondition: Valid place name, route, and embarkation point given.
  *	@param route Integer corresponding to route of trip.
  *	@param embarkNum Embarkation point of trip.
@@ -110,8 +110,7 @@ int getDropOff(int route, int embarkNum, char *dest)
     }
 
 	if (embarkNum == 0) {
-		if (!route) // 0
-		{
+		if (!route) { // 0
 			if (strcmp("Mamplasan Toll Exit", dest) == 0) return 1;
 			else if (strcmp("Phase 5, San Jose Village", dest) == 0) return 2;
 			else if (strcmp("Milagros Del Rosario Building - East Canopy", dest) == 0) return 3;
@@ -120,8 +119,7 @@ int getDropOff(int route, int embarkNum, char *dest)
 			else if (strcmp("Milagros Del Roasrio Building - East Canopy", dest) == 0) return 5;
 		}
 	} else if (embarkNum == 1) {
-		if (!route)
-		{
+		if (!route) {
 			if (strcmp("Petron Gasoline Station along Gil Puyat Avenue", dest) == 0) return 6;
 			else if (strcmp("Gate 4: Gokongwei Gate", dest) == 0) return 7;
 			else if (strcmp("Gate 2: North Gate (HSSH)", dest) == 0) return 8;

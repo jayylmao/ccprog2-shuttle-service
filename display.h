@@ -29,8 +29,7 @@
 void personnelMenu(Trip trips[], Date date)
 {
 	char userChoice;
-	do
-	{
+	do {
 		printHeader(YELLOW"Personnel Management Console"RESET, 80);
 		printf(YELLOW"[0.] Back \n"RESET);
 		printf("Go back to the main menu.\n\n");

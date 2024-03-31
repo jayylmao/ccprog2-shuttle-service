@@ -56,8 +56,6 @@ void displayTrip(int tripNumber, Trip trips[])
 				printf(".____.____.____.____.\n");
 			}
 		}
-
-		printf(".____.____.____.____.\n");
 	}
 }
 

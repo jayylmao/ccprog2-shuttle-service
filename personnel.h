@@ -15,7 +15,7 @@
 
 /*
  *	viewPassCount shows the number of passengers on a specified trip.
- *	Solution by: Jay Carlos
+ *	Solution by: Jay Carlos, modified by: Tyrrelle Mendoza
  *	Precondition: trips[] array exists.
  *	@param trips[] Array containing all trips in memory.
  *	@param nTrips Number of trips in the array.
@@ -271,7 +271,7 @@ void searchPass(Trip trips[], int nTrips)
 
 /*
  *	viewRecentFile lets the user select a file to view, without overwriting the current data in memory.
- *	Solution by: Tyrrelle Mendoza, modified by: Jay Carlos
+ *	Solution by: Tyrrelle Mendoza
  *	Precondition: None.
  *	@return None.
  */
@@ -432,5 +432,5 @@ void addPassInfo(Trip trips[], int nTrips)
 	}
 
 	system("clear||cls");
-	printf(GREEN"[/]: %d passengers were succesfully added from the file.\n"RESET, passNum);
+	printf(GREEN"[/]: %d passengers were successfully added from the file.\n"RESET, passNum);
 }
