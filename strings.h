@@ -59,6 +59,9 @@ void getDropOffName(int dropOffPt, char *dropOffString)
 		case 10:
 			strcpy(dropOffString, "College of St. Benilde (CSB) Along Taft");
 			break;
+		default:
+			strcpy(dropOffString, "Unknown");
+			break;
 	}
 }
 

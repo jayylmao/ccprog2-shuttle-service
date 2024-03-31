@@ -207,20 +207,22 @@ void getEmbarkationPointName(int embarkPtInt, char embarkName[])
  */
 int searchForLowerPriority(int priority, Trip trip)
 {
-	int i;
+	int i, min = priority;
+	int lowerPriorityIndex = -1;
 	int passengerCount;
 	passengerCount = trip.passengerCount;
 
-	// if statement uses < because smaller number is greater priority in the system. 
+	// if statement uses > because smaller number is greater priority in the system. 
 	// ex: 1 is higher priority than 2, so if passenger 3 has prio 2 but the passenger
 	// we're adding has prio 1, passenger 3 has a lower prio.
 	for (i = 0; i < passengerCount; i++) {
-		if (trip.passengers[i].priorityNumber < priority) {
-			return i;
+		if (trip.passengers[i].priorityNumber > min) {
+			min = trip.passengers[i].priorityNumber;
+			lowerPriorityIndex = i;
 		}
 	}
 
-	return -1;
+	return lowerPriorityIndex;
 }
 
 /*
@@ -236,6 +238,9 @@ void addPassenger(Passenger passenger, Trip *trips, int n)
 {
 	int passengerCount, lowerPriorityPassenger;
 	passengerCount = trips[n].passengerCount;
+
+	char dropOff[MAX];
+	getDropOffName(passenger.dropOffPt, dropOff);
 	
 	if (passengerCount >= MAX_PASSENGERS) {
 		lowerPriorityPassenger = searchForLowerPriority(passenger.priorityNumber, trips[n]);
@@ -254,6 +259,11 @@ void addPassenger(Passenger passenger, Trip *trips, int n)
 			printf(YELLOW"[*]: The system is completely unable to accept any more passengers.\n"RESET);
 		}
 	} else {
+		while (strcmp(dropOff, "Unknown") == 0 && passenger.dropOffPt < 1) {
+			passenger.dropOffPt--;
+			getDropOffName(passenger.dropOffPt, dropOff);
+		}
+
 		trips[n].passengers[passengerCount] = passenger;
 		trips[n].passengerCount++;
 	}

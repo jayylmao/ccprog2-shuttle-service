@@ -154,6 +154,8 @@ void viewPassInfo(Trip trips[], int nTrips)
 {
 	int i, passengerCount;
 	char buffer[MAX];
+	char dropOff[MAX];
+	char priority[MAX];
 	int tripIndex;
 
 	Passenger temp;
@@ -201,9 +203,12 @@ void viewPassInfo(Trip trips[], int nTrips)
 			// print sorted passenger list
 			printf(YELLOW"Trip "RESET"AE%d\n", trip.tripNumber);
 			for (i = 0; i < passengerCount; i++) {
-				printf(YELLOW"[%02d.] Name           : "RESET"%s %s\n", i + 1, sortedPassengers[i].name.firstName, sortedPassengers[i].name.lastName);
-				printf(YELLOW"      ID             : "RESET"%s\n", sortedPassengers[i].id);
-				printf(YELLOW"      Priority Number: "RESET"%d\n\n", sortedPassengers[i].priorityNumber);
+				getDropOffName(sortedPassengers[i].dropOffPt, dropOff);
+				getPriorityGroupName(sortedPassengers[i].priorityNumber, priority);
+				printf(YELLOW"[%02d.] Name    : "RESET"%s %s\n", i + 1, sortedPassengers[i].name.firstName, sortedPassengers[i].name.lastName);
+				printf(YELLOW"      ID      : "RESET"%s\n", sortedPassengers[i].id);
+				printf(YELLOW"      Priority: "RESET"%s (%d)\n", priority, sortedPassengers[i].priorityNumber);
+				printf(YELLOW"      Drop-off: "RESET"%s\n\n", dropOff);
 			}
 		} else {
 			printf(YELLOW"[*]: No passengers found on that trip.\n"RESET);
@@ -224,6 +229,8 @@ void searchPass(Trip trips[], int nTrips)
 {
 	int i, j, passengersFound = 0;
 	char input[MAX];
+	char priority[MAX];
+	char dropOff[MAX];
 
 	Passenger passenger;
 
@@ -255,9 +262,13 @@ void searchPass(Trip trips[], int nTrips)
 
 		for (i = 0; i < passengersFound; i++) {
 			passenger = output[i];
-			printf(YELLOW"[%02d.] Name           :" RESET " %s %s\n", i + 1, passenger.name.firstName, passenger.name.lastName);
-			printf(YELLOW"      ID             :" RESET " %s\n", passenger.id);
-			printf(YELLOW"      Priority Number:" RESET " %d\n", passenger.priorityNumber);
+			getDropOffName(passenger.dropOffPt, dropOff);
+			getPriorityGroupName(passenger.priorityNumber, priority);
+			
+			printf(YELLOW"[%02d.] Name    :" RESET " %s %s\n", i + 1, passenger.name.firstName, passenger.name.lastName);
+			printf(YELLOW"      ID      :" RESET " %s\n", passenger.id);
+			printf(YELLOW"      Priority:" RESET " %s (%d)\n", priority, passenger.priorityNumber);
+			printf(YELLOW"      Drop-off:" RESET " %s\n", dropOff);
 		}
 
 		// error message when no passengers are found.
@@ -351,7 +362,7 @@ void addPassInfo(Trip trips[], int nTrips)
 	char filename[MAX];
 
 	// temporary array to store passengers in.
-	Passenger passengers[16];
+	Passenger passengers[352];
 
 	// number of passengers.
 	int passNum = 0;
@@ -390,8 +401,8 @@ void addPassInfo(Trip trips[], int nTrips)
 	// start at -1 so first line will be 0.
 	line = -1;
 
-	// add the first 16 passengers in the file.
-	while (!feof(fp) && passNum < 16) {
+	// add all passengers in the file.
+	while (!feof(fp)) {
 		// first line is always name, so format is 2 strings, separated by a space.
 		if (line % 5 == 1) {
 			fscanf(fp, "%s %s", buffer, buffer2);

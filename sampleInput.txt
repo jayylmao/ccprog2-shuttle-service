@@ -18,8 +18,143 @@ test person3
 test person4
 12211306
 1
+101
+4
+test person6
+12211308
+1
+101
+2
+test person7
+12211309
+1
+101
+1
+test person8
+12211310
+3
+101
+6
+test person9
+12211311
+1
+101
+4
+test person10
+12211312
+2
+101
+4
+test person11
+12211313
+2
+101
+4
+test person12
+12211314
+1
+101
+4
+test person13
+12211315
+1
+101
+4
+test person14
+12211316
+2
+101
+4
+test person15
+12211317
+1
+101
+6
+test person16
+12211318
+1
+101
+6
+test person17
+12211319
+1
 102
 5
 test person5
 12211307
+1
+102
+6
+test person18
+12211320
+1
+102
+3
+test person19
+12211321
+1
+102
+1
+test person20
+12211322
+1
+102
+1
+test person21
+12211323
+1
+102
+2
+test person22
+12211324
+1
+102
+5
+test person23
+12211325
+2
+102
+1
+test person24
+12211326
+1
+102
+2
+test person25
+12211327
+1
+102
+1
+test person26
+12211328
+1
+102
+3
+test person27
+12211329
+1
+102
+2
+test person28
+12211330
+2
+102
+2
+test person29
+12211332
+1
+102
+1
+test person30
+12211331
+1
+102
+1
+test person31
+12211332
+1
+102
+1
+test person32
+12211333
 1
